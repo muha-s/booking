@@ -12,9 +12,6 @@ import java.time.LocalDate;
 @Data
 public class BookingCreateDto {
 
-    @NotNull(message = "User id cannot be null")
-    private Long userId;
-
     @NotNull(message = "Hotel id cannot be null")
     private Long hotelId;
 

@@ -18,8 +18,7 @@ public class HotelReview {
     @JoinColumn(name = "booking_id", nullable = false, unique = true)
     private Booking booking;
 
-    @Column(nullable = false)
-    private Double rating;
+    private Integer score;
 
     @Column(length = 2000)
     private String comment;

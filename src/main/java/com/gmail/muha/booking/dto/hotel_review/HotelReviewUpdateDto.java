@@ -8,9 +8,9 @@ import lombok.Data;
 @Data
 public class HotelReviewUpdateDto {
 
-    @DecimalMin(value = "0.0", message = "Rating cannot be less than 0")
-    @DecimalMax(value = "10.0", message = "Rating cannot be greater than 10")
-    private Double rating;
+    @DecimalMin(value = "0.0", message = "Score cannot be less than 0")
+    @DecimalMax(value = "10.0", message = "Score cannot be greater than 10")
+    private Integer score;
 
     @Size(min = 1, max = 200, message = "Comment must be between 1 and 200 characters")
     private String comment;

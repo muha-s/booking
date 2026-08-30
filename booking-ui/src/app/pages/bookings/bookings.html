@@ -1,0 +1,522 @@
+<div class="bookings-page">
+
+  <header class="header">
+    <div class="container header__content">
+
+      <a
+        class="logo"
+        routerLink="/">
+        Booking
+      </a>
+
+      <div class="header__actions">
+
+        <a
+          class="back-link"
+          routerLink="/">
+          ← На главную
+        </a>
+
+        @if (userProfile()) {
+        <span class="user-balance">
+            {{ userProfile()?.balance }} BYN
+          </span>
+        }
+
+      </div>
+
+    </div>
+  </header>
+
+
+  <main>
+
+    <section class="bookings-hero">
+      <div class="container">
+
+        <p class="bookings-hero__label">
+          Ваши путешествия
+        </p>
+
+        <h1>
+          Мои брони
+        </h1>
+
+        <p class="bookings-hero__description">
+          Здесь собрана история ваших бронирований.
+        </p>
+
+      </div>
+    </section>
+
+
+    <section class="bookings-content container">
+
+      @if (errorMessage()) {
+
+      <div class="bookings-error">
+        {{ errorMessage() }}
+      </div>
+
+      } @else if (bookings().length > 0) {
+
+      <div class="bookings-list">
+
+        @for (booking of bookings(); track booking.id) {
+
+        <article class="booking-card">
+
+          <div class="booking-card__main">
+
+            <div class="booking-card__top">
+
+              <div>
+
+                <h2>
+                  {{ booking.room.hotel.name }}
+
+                  <span class="hotel-stars">
+                        {{ getStars(booking.room.hotel.numberOfStars) }}
+                      </span>
+                </h2>
+
+                <p class="booking-address">
+                  {{ booking.room.hotel.city.name }},
+                  {{ booking.room.hotel.address }}
+                </p>
+
+              </div>
+
+
+              <div class="booking-card__top-actions">
+
+                @if (booking.status === 'ACTIVE') {
+
+                <button
+                  class="booking-update-button"
+                  type="button"
+                  (click)="openUpdate(booking)">
+                  Изменить
+                </button>
+
+                <button
+                  class="booking-cancel-button"
+                  type="button"
+                  (click)="openCancellation(booking)">
+                  Отменить
+                </button>
+
+                }
+
+                <span
+                  class="booking-status"
+                  [class]="getStatusClass(booking.status)">
+                      {{ getStatusLabel(booking.status) }}
+                    </span>
+
+              </div>
+
+            </div>
+
+
+            <div class="booking-details">
+
+              <div class="booking-detail">
+
+                    <span>
+                      Номер
+                    </span>
+
+                <strong>
+                  {{ getRoomType(booking.room.roomType) }}
+                </strong>
+
+              </div>
+
+
+              <div class="booking-detail">
+
+                    <span>
+                      Количество мест
+                    </span>
+
+                <strong>
+                  {{ getRoomCapacity(booking.room.roomCapacity) }}
+                </strong>
+
+              </div>
+
+
+              <div class="booking-detail">
+
+                    <span>
+                      Дата заезда
+                    </span>
+
+                <strong>
+                  {{ booking.startDate }}
+                </strong>
+
+              </div>
+
+
+              <div class="booking-detail">
+
+                    <span>
+                      Дата выезда
+                    </span>
+
+                <strong>
+                  {{ booking.endDate }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="booking-card__price">
+
+                <span>
+                  Стоимость
+                </span>
+
+            <strong>
+              {{ booking.totalPrice }} BYN
+            </strong>
+
+          </div>
+
+        </article>
+
+        }
+
+      </div>
+
+      } @else {
+
+      <div class="bookings-empty">
+
+        <div class="bookings-empty__icon">
+          🏨
+        </div>
+
+        <h2>
+          Бронирований пока нет
+        </h2>
+
+        <p>
+          Найдите подходящий отель и создайте свою первую бронь.
+        </p>
+
+        <a
+          class="bookings-empty__button"
+          routerLink="/">
+          Найти отель
+        </a>
+
+      </div>
+
+      }
+
+    </section>
+
+  </main>
+
+
+  <!-- ===================================================== -->
+  <!-- UPDATE BOOKING -->
+  <!-- ===================================================== -->
+
+  @if (bookingForUpdate(); as booking) {
+
+  <div class="update-modal-backdrop">
+
+    <div class="update-modal">
+
+      <h2>
+        Изменить бронирование
+      </h2>
+
+
+      <div class="update-modal__hotel">
+
+        <h3>
+          {{ booking.room.hotel.name }}
+
+          <span class="hotel-stars">
+              {{ getStars(booking.room.hotel.numberOfStars) }}
+            </span>
+        </h3>
+
+        <p>
+          {{ booking.room.hotel.city.name }},
+          {{ booking.room.hotel.address }}
+        </p>
+
+      </div>
+
+
+      <div class="update-form">
+
+        <label class="update-field">
+
+            <span>
+              Тип номера
+            </span>
+
+          <select [(ngModel)]="updateRoomType">
+
+            <option value="STANDARD">
+              Standard
+            </option>
+
+            <option value="COMFORT">
+              Comfort
+            </option>
+
+            <option value="LUXURY">
+              Luxury
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <label class="update-field">
+
+            <span>
+              Количество мест
+            </span>
+
+          <select [(ngModel)]="updateRoomCapacity">
+
+            <option value="ONE_SEAT">
+              1 место
+            </option>
+
+            <option value="TWO_SEAT">
+              2 места
+            </option>
+
+            <option value="THREE_SEAT">
+              3 места
+            </option>
+
+            <option value="FOUR_SEAT">
+              4 места
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <label class="update-field">
+
+            <span>
+              Дата заезда
+            </span>
+
+          <input
+            type="date"
+            [(ngModel)]="updateStartDate">
+
+        </label>
+
+
+        <label class="update-field">
+
+            <span>
+              Дата выезда
+            </span>
+
+          <input
+            type="date"
+            [(ngModel)]="updateEndDate">
+
+        </label>
+
+      </div>
+
+
+      <div class="update-modal__notice">
+
+        <strong>
+          Обратите внимание
+        </strong>
+
+        <p>
+          После изменения номера или дат стоимость бронирования
+          будет пересчитана автоматически.
+        </p>
+
+      </div>
+
+
+      @if (updateError()) {
+
+      <div class="update-modal__error">
+        {{ updateError() }}
+      </div>
+
+      }
+
+
+      <div class="update-modal__actions">
+
+        <button
+          class="update-modal__secondary"
+          type="button"
+          (click)="closeUpdate()">
+          Отмена
+        </button>
+
+        <button
+          class="update-modal__primary"
+          type="button"
+          (click)="confirmUpdate()">
+          Сохранить изменения
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- CANCELLATION CONFIRMATION -->
+  <!-- ===================================================== -->
+
+  @if (bookingForCancellation(); as booking) {
+
+  <div class="cancellation-modal-backdrop">
+
+    <div class="cancellation-modal">
+
+      <div class="cancellation-modal__icon">
+        !
+      </div>
+
+      <h2>
+        Отменить бронирование?
+      </h2>
+
+
+      <div class="cancellation-modal__hotel">
+
+        <h3>
+          {{ booking.room.hotel.name }}
+
+          <span class="hotel-stars">
+              {{ getStars(booking.room.hotel.numberOfStars) }}
+            </span>
+        </h3>
+
+        <p>
+          {{ booking.room.hotel.city.name }},
+          {{ booking.room.hotel.address }}
+        </p>
+
+      </div>
+
+
+      <div class="cancellation-modal__details">
+
+        <div>
+
+            <span>
+              Номер
+            </span>
+
+          <strong>
+            {{ getRoomType(booking.room.roomType) }} ·
+            {{ getRoomCapacity(booking.room.roomCapacity) }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+              Даты
+            </span>
+
+          <strong>
+            {{ booking.startDate }} — {{ booking.endDate }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+              Стоимость
+            </span>
+
+          <strong>
+            {{ booking.totalPrice }} BYN
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="cancellation-modal__warning">
+
+        <strong>
+          Обратите внимание
+        </strong>
+
+        <p>
+          Размер возврата зависит от количества времени,
+          оставшегося до даты заезда.
+        </p>
+
+      </div>
+
+
+      @if (cancellationError()) {
+
+      <div class="cancellation-modal__error">
+        {{ cancellationError() }}
+      </div>
+
+      }
+
+
+      <div class="cancellation-modal__actions">
+
+        <button
+          class="cancellation-modal__secondary"
+          type="button"
+          (click)="closeCancellation()">
+          Назад
+        </button>
+
+        <button
+          class="cancellation-modal__danger"
+          type="button"
+          (click)="confirmCancellation()">
+          Подтвердить отмену
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>

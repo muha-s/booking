@@ -44,6 +44,4 @@ public class Booking {
     @OneToOne(mappedBy = "booking")
     private HotelReview review;
 
-
-
 }

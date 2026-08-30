@@ -46,7 +46,6 @@ public class HotelMapper {
         hotelShortDto.setNumberOfStars(hotel.getNumberOfStars());
         hotelShortDto.setRating(hotel.getRating());
         hotelShortDto.setBasePricePerNight(hotel.getBasePricePerNight());
-        hotelShortDto.setBalance(hotel.getBalance());
 
         return hotelShortDto;
     }

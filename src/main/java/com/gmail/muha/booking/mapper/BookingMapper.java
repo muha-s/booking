@@ -1,9 +1,6 @@
 package com.gmail.muha.booking.mapper;
 
-import com.gmail.muha.booking.dto.booking.BookingCreateDto;
-import com.gmail.muha.booking.dto.booking.BookingFullDto;
-import com.gmail.muha.booking.dto.booking.BookingShortDto;
-import com.gmail.muha.booking.dto.booking.BookingUpdateDto;
+import com.gmail.muha.booking.dto.booking.*;
 import com.gmail.muha.booking.model.entity.Booking;
 import com.gmail.muha.booking.model.entity.Room;
 import com.gmail.muha.booking.model.entity.User;
@@ -55,6 +52,43 @@ public class BookingMapper {
         return bookingShortDto;
     }
 
+    public BookingForUserDto toForUserDto(Booking booking) {
+
+        BookingForUserDto bookingForUserDto = new BookingForUserDto();
+
+        bookingForUserDto.setId(booking.getId());
+        bookingForUserDto.setRoom(shortDtoMapper.toRoomShortDto(booking.getRoom()));
+        bookingForUserDto.setStartDate(booking.getStartDate());
+        bookingForUserDto.setEndDate(booking.getEndDate());
+        bookingForUserDto.setStatus(booking.getStatus());
+        bookingForUserDto.setTotalPrice(booking.getTotalPrice());
+
+        return bookingForUserDto;
+    }
+
+    public BookingForReviewDto toForReviewDto(Booking booking) {
+
+        BookingForReviewDto bookingForReviewDto = new BookingForReviewDto();
+
+        bookingForReviewDto.setId(booking.getId());
+
+        bookingForReviewDto.setHotelName(booking.getRoom().getHotel().getName());
+        bookingForReviewDto.setCityName(booking.getRoom().getHotel().getCity().getName());
+        bookingForReviewDto.setHotelAddress(booking.getRoom().getHotel().getAddress());
+        bookingForReviewDto.setNumberOfStars(booking.getRoom().getHotel().getNumberOfStars());
+
+        bookingForReviewDto.setRoomCapacity(booking.getRoom().getRoomCapacity());
+        bookingForReviewDto.setRoomType(booking.getRoom().getRoomType());
+
+        bookingForReviewDto.setStartDate(booking.getStartDate());
+        bookingForReviewDto.setEndDate(booking.getEndDate());
+        bookingForReviewDto.setStatus(booking.getStatus());
+
+        bookingForReviewDto.setReviewExists(booking.getReview() != null);
+
+        return bookingForReviewDto;
+    }
+
     public Booking toEntity(BookingCreateDto bookingCreateDto, User bookingUser, Room selectedRoom) {
         Booking booking = new Booking();
 
@@ -75,6 +109,12 @@ public class BookingMapper {
     public List<BookingShortDto> toShortDtoList(List<Booking> bookings) {
         return bookings.stream()
                 .map(this::toShortDto)
+                .toList();
+    }
+
+    public List<BookingForUserDto> toForUserDtoList(List<Booking> bookings) {
+        return bookings.stream()
+                .map(this::toForUserDto)
                 .toList();
     }
 }

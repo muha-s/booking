@@ -1,0 +1,110 @@
+<div class="page">
+
+  <header class="header">
+    <div class="container header__content">
+
+      <button
+        class="back-link"
+        type="button"
+        (click)="goBack()">
+        ← Назад
+      </button>
+
+      <a
+        class="back-link"
+        routerLink="/">
+        ← На главную
+      </a>
+
+    </div>
+  </header>
+
+  <main class="container reviews-page">
+
+    <div class="reviews-header">
+
+      <p class="reviews-header__label">
+        Мнения гостей
+      </p>
+
+      <h1>
+        Отзывы об отеле
+      </h1>
+
+      <p class="reviews-header__description">
+        Отзывы пользователей, которые завершили проживание в этом отеле.
+      </p>
+
+    </div>
+
+    @if (errorMessage()) {
+
+    <div class="error-message">
+      {{ errorMessage() }}
+    </div>
+
+    } @else if (reviews().length > 0) {
+
+    <div class="reviews-list">
+
+      @for (review of reviews(); track review.id) {
+
+      <article class="review-card">
+
+        <div class="review-card__header">
+
+          <div class="review-author">
+
+            <div class="review-author__avatar">
+              {{ review.authorName.charAt(0) }}
+            </div>
+
+            <strong>
+              {{ review.authorName }}
+            </strong>
+
+          </div>
+
+          @if (review.score !== null) {
+
+          <div class="review-score">
+            {{ review.score }} / 10
+          </div>
+
+          }
+
+        </div>
+
+        <p class="review-comment">
+          {{ review.comment }}
+        </p>
+
+      </article>
+
+      }
+
+    </div>
+
+    } @else {
+
+    <div class="empty-reviews">
+
+      <div class="empty-reviews__icon">
+        💬
+      </div>
+
+      <h2>
+        Отзывов пока нет
+      </h2>
+
+      <p>
+        Для этого отеля ещё никто не оставил текстовый отзыв.
+      </p>
+
+    </div>
+
+    }
+
+  </main>
+
+</div>

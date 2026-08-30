@@ -1,8 +1,6 @@
 package com.gmail.muha.booking.mapper;
 
-import com.gmail.muha.booking.dto.hotel_review.HotelReviewCreateDto;
-import com.gmail.muha.booking.dto.hotel_review.HotelReviewDto;
-import com.gmail.muha.booking.dto.hotel_review.HotelReviewUpdateDto;
+import com.gmail.muha.booking.dto.hotel_review.*;
 import com.gmail.muha.booking.model.entity.Booking;
 import com.gmail.muha.booking.model.entity.HotelReview;
 import org.springframework.stereotype.Component;
@@ -18,12 +16,12 @@ public class HotelReviewMapper {
         this.shortDtoMapper = shortDtoMapper;
     }
 
-    public HotelReviewDto toDto(HotelReview hotelReview) {
+    public HotelReviewDto toHotelReviewDto(HotelReview hotelReview) {
 
         HotelReviewDto hotelReviewDto = new HotelReviewDto();
         hotelReviewDto.setId(hotelReview.getId());
         hotelReviewDto.setBooking(shortDtoMapper.toBookingShortDto(hotelReview.getBooking()));
-        hotelReviewDto.setRating(hotelReview.getRating());
+        hotelReviewDto.setScore(hotelReview.getScore());
         hotelReviewDto.setComment(hotelReview.getComment());
         hotelReviewDto.setCreatedAt(hotelReview.getCreatedAt());
 
@@ -34,16 +32,27 @@ public class HotelReviewMapper {
         HotelReview hotelReview = new HotelReview();
 
         hotelReview.setBooking(hotelReviewBooking);
-        hotelReview.setRating(hotelReviewCreateDto.getRating());
+        hotelReview.setScore(hotelReviewCreateDto.getScore());
         hotelReview.setComment(hotelReviewCreateDto.getComment());
 
         return hotelReview;
     }
 
+    public HotelReviewResponseDto toHotelReviewResponseDto(HotelReview hotelReview) {
+        HotelReviewResponseDto hotelReviewResponseDto = new HotelReviewResponseDto();
+
+        hotelReviewResponseDto.setId(hotelReview.getId());
+        hotelReviewResponseDto.setScore(hotelReview.getScore());
+        hotelReviewResponseDto.setComment(hotelReview.getComment());
+        hotelReviewResponseDto.setCreatedAt(hotelReview.getCreatedAt());
+
+        return hotelReviewResponseDto;
+    }
+
     public void updateEntity(HotelReviewUpdateDto hotelReviewUpdateDto, HotelReview entity) {
 
-        if (hotelReviewUpdateDto.getRating() != null) {
-            entity.setRating(hotelReviewUpdateDto.getRating());
+        if (hotelReviewUpdateDto.getScore() != null) {
+            entity.setScore(hotelReviewUpdateDto.getScore());
         }
 
         if (hotelReviewUpdateDto.getComment() != null) {
@@ -51,9 +60,21 @@ public class HotelReviewMapper {
         }
     }
 
-    public List<HotelReviewDto> toDtoList(List<HotelReview> hotelReviews) {
+    public List<HotelReviewDto> toHotelReviewDtoList(List<HotelReview> hotelReviews) {
         return hotelReviews.stream()
-                .map(this::toDto)
+                .map(this::toHotelReviewDto)
                 .toList();
+    }
+
+    public HotelReviewForHotelDto toHotelReviewForHotelDto(HotelReview hotelReview) {
+        HotelReviewForHotelDto dto = new HotelReviewForHotelDto();
+
+        dto.setId(hotelReview.getId());
+        dto.setAuthorName(hotelReview.getBooking().getUser().getFirstName());
+        dto.setScore(hotelReview.getScore());
+        dto.setComment(hotelReview.getComment());
+        dto.setCreatedAt(hotelReview.getCreatedAt());
+
+        return dto;
     }
 }

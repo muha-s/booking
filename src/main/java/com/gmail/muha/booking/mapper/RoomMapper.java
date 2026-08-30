@@ -5,11 +5,11 @@ import com.gmail.muha.booking.model.entity.Hotel;
 import com.gmail.muha.booking.model.entity.Room;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
 public class RoomMapper {
-
 
     private final ShortDtoMapper shortDtoMapper;
 
@@ -28,6 +28,29 @@ public class RoomMapper {
         roomFullDto.setBookings(shortDtoMapper.toBookingShortDtoList(room.getBookings()));
 
         return roomFullDto;
+    }
+
+    public RoomAvailableDto toAvailableDto(Room room) {
+
+        RoomAvailableDto roomAvailableDto = new RoomAvailableDto();
+
+        roomAvailableDto.setId(room.getId());
+        roomAvailableDto.setHotelId(room.getHotel().getId());
+        roomAvailableDto.setHotelName(room.getHotel().getName());
+        roomAvailableDto.setHotelAddress(room.getHotel().getAddress());
+        roomAvailableDto.setHotelStars(room.getHotel().getNumberOfStars());
+        roomAvailableDto.setHotelRating(room.getHotel().getRating());
+        roomAvailableDto.setRoomType(room.getRoomType());
+        roomAvailableDto.setRoomCapacity(room.getRoomCapacity());
+
+        BigDecimal pricePerNight =
+                room.getHotel().getBasePricePerNight()
+                        .multiply(BigDecimal.valueOf(room.getRoomType().getCostFactor()))
+                        .multiply(BigDecimal.valueOf(room.getRoomCapacity().getCostFactor()));
+
+        roomAvailableDto.setPricePerNight(pricePerNight);
+
+        return roomAvailableDto;
     }
 
     public RoomShortDto toShortDto(Room room) {
@@ -72,8 +95,10 @@ public class RoomMapper {
     }
 
     public List<RoomShortDto> toShortDtoList(List<Room> rooms) {
-        return rooms.stream()
-                .map(this::toShortDto)
-                .toList();
+        return rooms.stream().map(this::toShortDto).toList();
+    }
+
+    public List<RoomAvailableDto> toAvailableDtoList(List<Room> rooms) {
+        return rooms.stream().map(this::toAvailableDto).toList();
     }
 }

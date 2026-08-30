@@ -1,0 +1,54 @@
+<div class="login-page">
+
+  <header class="header">
+    <div class="container header__content">
+      <a class="logo" href="/">Booking</a>
+    </div>
+  </header>
+
+  <main class="login-main">
+    <div class="login-card">
+
+      <h1>Вход</h1>
+
+      <p class="login-description">
+        Войдите в аккаунт, чтобы управлять своими бронированиями.
+      </p>
+
+      <form>
+        <label class="login-field">
+          <span>Email</span>
+          <input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="example@mail.com">
+        </label>
+
+        <label class="login-field">
+          <span>Пароль</span>
+          <input
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Введите пароль">
+        </label>
+
+        @if (errorMessage()) {
+        <p class="login-error">
+          {{ errorMessage() }}
+        </p>
+        }
+
+        <button
+          class="login-button"
+          type="button"
+          (click)="login()">
+          Войти
+        </button>
+      </form>
+
+    </div>
+  </main>
+
+</div>

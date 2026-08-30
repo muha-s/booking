@@ -17,5 +17,5 @@ public class HotelShortDto {
     private NumberOfStars numberOfStars;
     private Double rating;
     private BigDecimal basePricePerNight;
-    private BigDecimal balance;
+
 }

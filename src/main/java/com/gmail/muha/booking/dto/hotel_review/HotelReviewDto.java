@@ -10,7 +10,7 @@ public class HotelReviewDto {
 
     private Long id;
     private BookingShortDto booking;
-    private Double rating;
+    private Integer score;
     private String comment;
     private Instant createdAt;
 }

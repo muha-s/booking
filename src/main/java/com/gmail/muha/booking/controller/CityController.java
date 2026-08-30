@@ -4,7 +4,7 @@ import com.gmail.muha.booking.dto.city.CityCreateDto;
 import com.gmail.muha.booking.dto.city.CityFullDto;
 import com.gmail.muha.booking.dto.city.CityShortDto;
 import com.gmail.muha.booking.dto.city.CityUpdateDto;
-import com.gmail.muha.booking.service.CityService;
+import com.gmail.muha.booking.service.city.CityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

@@ -1,0 +1,147 @@
+<div class="register-page">
+
+  <header class="header">
+    <div class="container header__content">
+      <a class="logo" href="/">Booking</a>
+    </div>
+  </header>
+
+  <main class="register-main">
+
+    <div class="register-card">
+
+      @if (!successMessage()) {
+
+      <h1>Регистрация</h1>
+
+      <p class="register-description">
+        Создайте аккаунт, чтобы бронировать номера и управлять своими бронированиями.
+      </p>
+
+      <form>
+
+        <label class="register-field">
+          <span>Имя<span class="required">*</span></span>
+
+          <input
+            type="text"
+            [(ngModel)]="firstName"
+            name="firstName">
+        </label>
+
+
+        <label class="register-field">
+          <span>Фамилия<span class="required">*</span></span>
+
+          <input
+            type="text"
+            [(ngModel)]="lastName"
+            name="lastName">
+        </label>
+
+
+        <label class="register-field">
+          <span>Телефон<span class="required">*</span></span>
+
+          <input
+            type="tel"
+            [(ngModel)]="phone"
+            name="phone">
+        </label>
+
+
+        <label class="register-field">
+          <span>Email<span class="required">*</span></span>
+
+          <input
+            type="email"
+            [(ngModel)]="email"
+            name="email">
+        </label>
+
+
+        <label class="register-field">
+          <span>Пароль<span class="required">*</span></span>
+
+          <input
+            type="password"
+            [(ngModel)]="password"
+            name="password">
+        </label>
+
+
+        <label class="register-field">
+          <span>Повторите пароль<span class="required">*</span></span>
+
+          <input
+            type="password"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword">
+        </label>
+
+
+        <label class="register-field">
+          <span>Начальный баланс<span class="required">*</span></span>
+
+          <input
+            type="number"
+            min="0"
+            [(ngModel)]="initialBalance"
+            name="initialBalance">
+        </label>
+
+
+        @if (errorMessage()) {
+        <p class="register-error">
+          {{ errorMessage() }}
+        </p>
+        }
+
+
+        <button
+          class="register-button"
+          type="button"
+          [disabled]="isLoading()"
+          (click)="register()">
+
+          @if (isLoading()) {
+          Регистрация...
+          } @else {
+          Зарегистрироваться
+          }
+
+        </button>
+
+      </form>
+
+      } @else {
+
+      <div class="register-success-block">
+
+        <h1>Регистрация успешна</h1>
+
+        <p>
+          Мы отправили Вам письмо для подтверждения регистрации.
+        </p>
+
+        <p>
+          Проверьте email:
+          <strong>{{ registeredEmail }}</strong>
+          и перейдите по ссылке из письма.
+        </p>
+
+        <a
+          class="register-button"
+          href="/login">
+          Перейти ко входу
+        </a>
+
+      </div>
+
+      }
+
+    </div>
+
+  </main>
+
+</div>

@@ -22,6 +22,7 @@ public class UserCreateDto {
 
     @NotBlank(message = "Email cannot be blank")
     @Email(message = "Email format is invalid")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Email format is invalid")
     @Size(max = 100, message = "Email must not exceed 100 characters")
     private String email;
 
@@ -32,6 +33,6 @@ public class UserCreateDto {
 
     @NotNull(message = "Balance cannot be null")
     @PositiveOrZero(message = "Balance cannot be negative")
-    private BigDecimal balance;
+    private BigDecimal initialBalance;
 
 }

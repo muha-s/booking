@@ -1,0 +1,70 @@
+.verify-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f4c81, #1e9ad6);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.verify-card {
+  padding: 32px;
+  border-radius: 12px;
+  background: white;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+.success-message {
+  color: #2e7d32;
+}
+
+.error-message {
+  color: #c62828;
+}
+
+.login-link {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  background: #ff9800;
+  color: white;
+  text-decoration: none;
+}
+
+.verify-success-icon {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: white;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.verify-card h2 {
+  font-size: 32px;
+  margin-bottom: 14px;
+}
+
+.success-message {
+  color: #15803d;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.verify-success-text {
+  margin: 14px 0 24px;
+  color: #334155;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+}

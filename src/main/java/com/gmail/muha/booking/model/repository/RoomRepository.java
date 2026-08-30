@@ -110,5 +110,32 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             RoomCapacity roomCapacity
     );
 
-
+    @Query("""
+       select room
+       from Room room
+       join room.hotel hotel
+       join hotel.city city
+       where city.id = :cityId
+         and city.deletedAt is null
+         and hotel.deletedAt is null
+         and room.deletedAt is null
+         and (:roomCapacity is null or room.roomCapacity = :roomCapacity)
+         and (:roomType is null or room.roomType = :roomType)
+         and not exists (
+             select booking.id
+             from Booking booking
+             where booking.room = room
+               and booking.status =
+                   com.gmail.muha.booking.model.entity.enums.BookingStatus.ACTIVE
+               and booking.startDate < :endDate
+               and booking.endDate > :startDate
+         )
+       """)
+    List<Room> findAvailableRooms(
+            Long cityId,
+            LocalDate startDate,
+            LocalDate endDate,
+            RoomCapacity roomCapacity,
+            RoomType roomType
+    );
 }

@@ -1,0 +1,171 @@
+<div class="admin-page">
+
+  <header class="header">
+
+    <div class="header__content">
+
+      <div class="logo">
+        Booking
+      </div>
+
+      <div class="header__right">
+
+        <span class="admin-role">
+          SUPER ADMIN
+        </span>
+
+        <button
+          class="logout-button"
+          type="button"
+          (click)="logout()">
+          ↪ Выйти
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <section class="hero">
+
+      <div class="container">
+
+        <p class="hero__label">
+          Панель администратора
+        </p>
+
+        <h1>
+          Управление Booking
+        </h1>
+
+        <p class="hero__description">
+          Управление администраторами, отелями, городами и пользователями системы.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <section class="dashboard container">
+
+      <article class="dashboard-card">
+
+        <div class="dashboard-card__icon">
+          👤
+        </div>
+
+        <div class="dashboard-card__content">
+
+          <h2>
+            Администраторы отелей
+          </h2>
+
+          <p>
+            Создание администраторов и назначение их на отели.
+          </p>
+
+        </div>
+
+        <button
+          class="dashboard-card__button"
+          type="button"
+          disabled>
+          Управление
+        </button>
+
+      </article>
+
+
+      <article class="dashboard-card">
+
+        <div class="dashboard-card__icon">
+          🏨
+        </div>
+
+        <div class="dashboard-card__content">
+
+          <h2>
+            Отели
+          </h2>
+
+          <p>
+            Создание, изменение и управление отелями системы.
+          </p>
+
+        </div>
+
+        <button
+          class="dashboard-card__button"
+          type="button"
+          disabled>
+          Управление
+        </button>
+
+      </article>
+
+
+      <article class="dashboard-card">
+
+        <div class="dashboard-card__icon">
+          🌍
+        </div>
+
+        <div class="dashboard-card__content">
+
+          <h2>
+            Города
+          </h2>
+
+          <p>
+            Управление городами, в которых представлены отели.
+          </p>
+
+        </div>
+
+        <button
+          class="dashboard-card__button"
+          type="button"
+          disabled>
+          Управление
+        </button>
+
+      </article>
+
+
+      <article class="dashboard-card">
+
+        <div class="dashboard-card__icon">
+          👥
+        </div>
+
+        <div class="dashboard-card__content">
+
+          <h2>
+            Пользователи
+          </h2>
+
+          <p>
+            Просмотр зарегистрированных пользователей системы.
+          </p>
+
+        </div>
+
+        <button
+          class="dashboard-card__button"
+          type="button"
+          disabled>
+          Просмотр
+        </button>
+
+      </article>
+
+    </section>
+
+  </main>
+
+</div>

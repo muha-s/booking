@@ -33,7 +33,7 @@ class FullDtoMapper {
         HotelReviewDto hotelReviewDto = new HotelReviewDto();
         hotelReviewDto.setId(hotelReview.getId());
         hotelReviewDto.setBooking(shortDtoMapper.toBookingShortDto(hotelReview.getBooking()));
-        hotelReviewDto.setRating(hotelReview.getRating());
+        hotelReviewDto.setScore(hotelReview.getScore());
         hotelReviewDto.setComment(hotelReview.getComment());
         hotelReviewDto.setCreatedAt(hotelReview.getCreatedAt());
 

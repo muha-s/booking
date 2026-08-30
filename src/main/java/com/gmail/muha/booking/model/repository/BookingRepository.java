@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
@@ -65,4 +66,29 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
               and booking.startDate >= CURRENT_DATE
             """)
     List<Booking> findFutureActiveBookingsByRoomId(@Param("roomId") Long roomId);
+
+    @Query("""
+            select booking
+            from Booking booking
+            where booking.user.email = :userEmail
+            order by
+                case
+                    when booking.status = com.gmail.muha.booking.model.entity.enums.BookingStatus.ACTIVE then 0
+                    when booking.status = com.gmail.muha.booking.model.entity.enums.BookingStatus.COMPLETED then 1
+                    when booking.status = com.gmail.muha.booking.model.entity.enums.BookingStatus.CANCELLED then 2
+                    else 3
+                end,
+                booking.startDate desc
+            """)
+    List<Booking> findAllByUserEmail(@Param("userEmail") String userEmail);
+
+    @Query("""
+            select booking
+            from Booking booking
+            where booking.id = :id
+              and booking.user.email = :userEmail
+            """)
+    Optional<Booking> findByIdAndUserEmail(
+            @Param("id") Long id,
+            @Param("userEmail") String userEmail);
 }

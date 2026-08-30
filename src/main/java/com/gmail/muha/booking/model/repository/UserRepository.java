@@ -32,4 +32,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
          and user.deletedAt is null
        """)
     Optional<User> findActiveByEmail(@Param("email") String email);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByEmailIgnoreCase(String email);
+
+    boolean existsByPendingEmailIgnoreCase(String pendingEmail);
 }

@@ -1,0 +1,21 @@
+<div class="verify-page">
+  <div class="verify-card">
+
+    <h2>Подтверждение email</h2>
+
+    @if (successMessage()) {
+    <div class="verify-success-icon">
+      ✓
+    </div>
+
+    <h2>Email успешно подтверждён</h2>
+
+    <p class="verify-success-text">
+      Аккаунт активирован. Теперь вы можете войти и пользоваться сервисом.
+    </p>
+    }
+
+    <a routerLink="/login" class="login-link">Перейти ко входу</a>
+
+  </div>
+</div>

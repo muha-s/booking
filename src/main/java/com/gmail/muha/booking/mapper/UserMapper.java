@@ -1,9 +1,6 @@
 package com.gmail.muha.booking.mapper;
 
-import com.gmail.muha.booking.dto.user.UserCreateDto;
-import com.gmail.muha.booking.dto.user.UserFullDto;
-import com.gmail.muha.booking.dto.user.UserShortDto;
-import com.gmail.muha.booking.dto.user.UserUpdateDto;
+import com.gmail.muha.booking.dto.user.*;
 import com.gmail.muha.booking.model.entity.User;
 import com.gmail.muha.booking.model.entity.enums.UserRole;
 import org.springframework.stereotype.Component;
@@ -36,6 +33,20 @@ public class UserMapper {
         return userFullDto;
     }
 
+    public UserProfileDto toUserProfileDto(User user) {
+
+        UserProfileDto userProfileDto = new UserProfileDto();
+
+        userProfileDto.setId(user.getId());
+        userProfileDto.setRole(user.getRole());
+        userProfileDto.setFirstName(user.getFirstName());
+        userProfileDto.setLastName(user.getLastName());
+        userProfileDto.setPhone(user.getPhone());
+        userProfileDto.setBalance(user.getBalance());
+
+        return userProfileDto;
+    }
+
     public UserShortDto toShortDto(User user) {
         UserShortDto userShortDto = new UserShortDto();
 
@@ -56,7 +67,7 @@ public class UserMapper {
         user.setPhone(userCreateDto.getPhone());
         user.setEmail(userCreateDto.getEmail());
         user.setPassword(userCreateDto.getPassword());
-        user.setBalance(userCreateDto.getBalance());
+        user.setBalance(userCreateDto.getInitialBalance());
 
         return user;
     }
@@ -75,13 +86,6 @@ public class UserMapper {
             entity.setPhone(userUpdateDto.getPhone());
         }
 
-        if (userUpdateDto.getEmail() != null) {
-            entity.setEmail(userUpdateDto.getEmail());
-        }
-
-        if (userUpdateDto.getBalance() != null) {
-            entity.setBalance(userUpdateDto.getBalance());
-        }
     }
 
     public List<UserShortDto> toShortDtoList(List<User> users) {

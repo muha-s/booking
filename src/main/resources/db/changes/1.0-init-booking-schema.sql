@@ -88,7 +88,7 @@ CREATE TABLE bookings (
 CREATE TABLE hotel_reviews (
     id BIGINT AUTO_INCREMENT,
     booking_id BIGINT NOT NULL UNIQUE,
-    rating DOUBLE NOT NULL,
+    score INT,
     comment VARCHAR(2000),
     created_at DATETIME NOT NULL,
 

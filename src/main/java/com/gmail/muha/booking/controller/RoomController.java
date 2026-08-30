@@ -1,7 +1,8 @@
 package com.gmail.muha.booking.controller;
 
 import com.gmail.muha.booking.dto.room.*;
-import com.gmail.muha.booking.service.RoomService;
+import com.gmail.muha.booking.service.room.RoomSearchService;
+import com.gmail.muha.booking.service.room.RoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 public class RoomController {
 
     private final RoomService roomService;
+    private final RoomSearchService roomSearchService;
 
     @GetMapping
     public List<RoomShortDto> findAll() {
@@ -23,6 +25,11 @@ public class RoomController {
     @GetMapping("/{id}")
     public RoomFullDto findById(@PathVariable Long id) {
         return roomService.findById(id);
+    }
+
+    @GetMapping("/available")
+    public List<RoomAvailableDto> findAvailableRooms(@Valid @ModelAttribute RoomSearchCriteriaDto roomSearchCriteriaDto) {
+        return roomSearchService.findAvailableRooms(roomSearchCriteriaDto);
     }
 
     @PostMapping

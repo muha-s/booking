@@ -1,5 +1,6 @@
 package com.gmail.muha.booking.dto.auth;
 
+import com.gmail.muha.booking.model.entity.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -8,4 +9,5 @@ import lombok.Data;
 public class LoginResponseDto {
 
     private String token;
+    private UserRole role;
 }

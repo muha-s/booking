@@ -2,7 +2,6 @@ package com.gmail.muha.booking.model.entity;
 
 import com.gmail.muha.booking.model.entity.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -37,6 +36,9 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(name = "pending_email", unique = true)
+    private String pendingEmail;
+
     @Column(nullable = false)
     private String password;
 
@@ -51,4 +53,7 @@ public class User {
 
     @ManyToMany(mappedBy = "admins")
     private Set<Hotel> managedHotels = new HashSet<>();
+
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified;
 }

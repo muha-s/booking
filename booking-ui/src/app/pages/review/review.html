@@ -1,0 +1,286 @@
+<div class="review-page">
+
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">Booking</div>
+
+      <a class="home-link" href="/">
+        ← На главную
+      </a>
+    </div>
+  </header>
+
+
+  <main class="review-main">
+
+    <div class="review-wrapper">
+
+      @if (loading()) {
+
+      <div class="review-card state-card">
+        Загрузка...
+      </div>
+
+      } @else if (booking(); as booking) {
+
+      <div class="review-card">
+
+        <div class="review-title">
+          <span class="subtitle">ВАШЕ МНЕНИЕ ВАЖНО</span>
+          <h1>Оставить отзыв</h1>
+        </div>
+
+
+        <div class="hotel-block">
+
+          <div>
+            <h2>{{ booking.hotelName }}</h2>
+
+            <div class="stars">
+              @switch (booking.numberOfStars) {
+              @case ('ONE_STAR') {
+              ★
+              }
+              @case ('TWO_STARS') {
+              ★★
+              }
+              @case ('THREE_STARS') {
+              ★★★
+              }
+              @case ('THREE_STARS_PLUS') {
+              ★★★+
+              }
+              @case ('FOUR_STARS') {
+              ★★★★
+              }
+              @case ('FOUR_STARS_PLUS') {
+              ★★★★+
+              }
+              @case ('FIVE_STARS') {
+              ★★★★★
+              }
+              @case ('FIVE_STARS_PLUS') {
+              ★★★★★+
+              }
+              }
+            </div>
+          </div>
+
+          <p>
+            {{ booking.cityName }}, {{ booking.hotelAddress }}
+          </p>
+
+        </div>
+
+
+        <div class="booking-info">
+
+          <div class="booking-info-item">
+            <span class="info-label">Номер</span>
+
+            <strong>
+              @switch (booking.roomType) {
+              @case ('STANDARD') {
+              Standard
+              }
+              @case ('COMFORT') {
+              Comfort
+              }
+              @case ('LUXURY') {
+              Luxury
+              }
+              }
+
+              ·
+
+              @switch (booking.roomCapacity) {
+              @case ('ONE_SEAT') {
+              1 место
+              }
+              @case ('TWO_SEAT') {
+              2 места
+              }
+              @case ('THREE_SEAT') {
+              3 места
+              }
+              @case ('FOUR_SEAT') {
+              4 места
+              }
+              }
+            </strong>
+          </div>
+
+
+          <div class="booking-info-item">
+            <span class="info-label">Период проживания</span>
+
+            <strong>
+              {{ booking.startDate }} — {{ booking.endDate }}
+            </strong>
+          </div>
+
+        </div>
+
+
+        @if (booking.status !== 'COMPLETED') {
+
+        <div class="unavailable">
+          <h3>Отзыв пока недоступен</h3>
+
+          <p>
+            Отзыв можно оставить только после завершения проживания.
+          </p>
+        </div>
+
+        } @else if (booking.reviewExists) {
+
+        <div class="unavailable">
+          <h3>Отзыв уже оставлен</h3>
+
+          <p>
+            Вы уже оставили отзыв по этому бронированию.
+          </p>
+        </div>
+
+        } @else {
+
+        <div class="review-form">
+
+          <div class="form-section">
+
+            <h3>Ваша оценка</h3>
+
+            <p class="form-hint">
+              Выберите оценку от 0 до 10.
+            </p>
+
+
+            <div class="score-list">
+
+              @for (value of scores; track value) {
+
+              <button
+                type="button"
+                class="score-button"
+                [class.selected]="score === value"
+                [disabled]="sending()"
+                (click)="selectScore(value)">
+                {{ value }}
+              </button>
+
+              }
+
+            </div>
+
+          </div>
+
+
+          <div class="form-section">
+
+            <div class="comment-title">
+
+              <div>
+                <h3>Комментарий</h3>
+
+                <p class="form-hint">
+                  Достаточно оценки или комментария — заполнять оба поля необязательно.
+                </p>
+              </div>
+
+              <span class="counter">
+                    {{ comment.length }} / 200
+                  </span>
+
+            </div>
+
+
+            <textarea
+              [(ngModel)]="comment"
+              maxlength="200"
+              rows="6"
+              [disabled]="sending()"
+              placeholder="Расскажите о ваших впечатлениях">
+                </textarea>
+
+          </div>
+
+
+          @if (errorMessage()) {
+
+          <div class="error-message">
+            {{ errorMessage() }}
+          </div>
+
+          }
+
+
+          <div class="actions">
+
+            <button
+              type="button"
+              class="submit-button"
+              [disabled]="!reviewCanBeSent() || sending()"
+              (click)="submitReview()">
+
+              @if (sending()) {
+              Отправка...
+              } @else {
+              Отправить отзыв
+              }
+
+            </button>
+
+          </div>
+
+        </div>
+
+        }
+
+      </div>
+
+      } @else {
+
+      <div class="review-card state-card">
+
+        <h2>Не удалось открыть страницу</h2>
+
+        <p>
+          {{ errorMessage() }}
+        </p>
+
+      </div>
+
+      }
+
+    </div>
+
+  </main>
+
+
+  @if (reviewSent()) {
+
+  <div class="modal-backdrop">
+
+    <div class="success-modal">
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+      <h2>Спасибо за отзыв!</h2>
+
+      <p>
+        Ваш отзыв успешно сохранён.
+      </p>
+
+      <a class="modal-button" href="/">
+        На главную
+      </a>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>

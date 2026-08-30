@@ -1,0 +1,659 @@
+<div class="page">
+
+  <header class="header">
+    <div class="header__actions">
+
+      @if (isLoggedIn()) {
+
+      @if (userProfile()?.role === 'USER') {
+
+      <div class="user-info">
+        <div class="user-avatar">
+          {{ userProfile()?.firstName?.charAt(0) }}
+        </div>
+
+        <span class="user-name">
+              {{ userProfile()?.firstName }} {{ userProfile()?.lastName }}
+            </span>
+      </div>
+
+      <button
+        class="button button--outline"
+        type="button"
+        routerLink="/bookings">
+        📋 Мои брони
+      </button>
+
+      <button
+        class="button button--outline"
+        type="button"
+        routerLink="/settings">
+        ⚙ Настройки
+      </button>
+
+      <span class="user-balance">
+            {{ userProfile()?.balance }} BYN
+          </span>
+
+      <button
+        class="button button--light"
+        type="button"
+        (click)="logout()">
+        ↪ Выйти
+      </button>
+
+      }
+
+      } @else {
+
+      <button
+        class="button button--outline"
+        type="button"
+        routerLink="/register">
+        Регистрация
+      </button>
+
+      <button
+        class="button button--light"
+        type="button"
+        routerLink="/login">
+        Войти
+      </button>
+
+      }
+
+    </div>
+  </header>
+
+
+  <main>
+
+    <section class="hero">
+
+      <div class="container hero__content">
+
+        <p class="hero__label">
+          Путешествовать проще, чем кажется
+        </p>
+
+        <h1>
+          Найдите подходящий отель
+        </h1>
+
+        <p class="hero__description">
+          Выберите город, даты и категорию номера — мы покажем подходящие варианты.
+        </p>
+
+
+        <div class="search-panel">
+
+          <label class="search-field">
+
+            <span>Город</span>
+
+            <select [(ngModel)]="selectedCityId">
+
+              <option [ngValue]="null">
+                Выберите город
+              </option>
+
+              @for (city of cities(); track city.id) {
+
+              <option [ngValue]="city.id">
+                {{ city.name }}
+              </option>
+
+              }
+
+            </select>
+
+          </label>
+
+
+          <label class="search-field">
+
+            <span>Дата заезда</span>
+
+            <input
+              type="date"
+              [(ngModel)]="checkIn">
+
+          </label>
+
+
+          <label class="search-field">
+
+            <span>Дата выезда</span>
+
+            <input
+              type="date"
+              [(ngModel)]="checkOut">
+
+          </label>
+
+
+          <label class="search-field">
+
+            <span>Количество мест</span>
+
+            <select [(ngModel)]="selectedCapacity">
+
+              <option value="">
+                Любое
+              </option>
+
+              <option value="ONE_SEAT">
+                1 место
+              </option>
+
+              <option value="TWO_SEAT">
+                2 места
+              </option>
+
+              <option value="THREE_SEAT">
+                3 места
+              </option>
+
+              <option value="FOUR_SEAT">
+                4 места
+              </option>
+
+            </select>
+
+          </label>
+
+
+          <label class="search-field">
+
+            <span>Тип номера</span>
+
+            <select [(ngModel)]="selectedRoomType">
+
+              <option value="">
+                Любой
+              </option>
+
+              <option value="STANDARD">
+                Standard
+              </option>
+
+              <option value="COMFORT">
+                Comfort
+              </option>
+
+              <option value="LUXURY">
+                Luxury
+              </option>
+
+            </select>
+
+          </label>
+
+
+          <div class="search-actions">
+
+            <button
+              class="search-button"
+              type="button"
+              (click)="search()">
+              Найти
+            </button>
+
+            <button
+              class="search-reset-button"
+              type="button"
+              (click)="resetSearch()">
+              Сбросить
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    @if (rooms().length > 0) {
+
+    <section class="results container">
+
+      <h2>
+        Доступные номера
+      </h2>
+
+
+      @for (room of rooms(); track room.id) {
+
+      <article class="room-card">
+
+        <div>
+
+          <h3>
+
+            {{ room.hotelName }}
+
+            <span class="hotel-stars">
+                  {{ getStars(room.hotelStars) }}
+                </span>
+
+          </h3>
+
+
+          <p>
+            {{ room.hotelAddress }}
+          </p>
+
+
+          <div class="hotel-rating-row">
+
+                <span class="hotel-rating">
+
+                  Рейтинг:
+
+                  <strong>
+                    {{ room.hotelRating }}
+                  </strong>
+
+                </span>
+
+
+            @if (isLoggedIn()) {
+
+            <span class="hotel-rating-row__separator">
+                    ·
+                  </span>
+
+
+            @if (room.hotelReviewCount > 0) {
+
+            <a
+              class="hotel-reviews-link"
+              [routerLink]="['/hotels', room.hotelId, 'reviews']">
+              Отзывы ({{ room.hotelReviewCount }})
+            </a>
+
+            } @else {
+
+            <span class="hotel-reviews-empty">
+                      Отзывы (0)
+                    </span>
+
+            }
+
+            }
+
+          </div>
+
+
+          <strong>
+            {{ room.roomType }} ·
+            {{ getRoomCapacity(room.roomCapacity) }}
+          </strong>
+
+        </div>
+
+
+        <div class="room-card__price">
+
+              <span>
+                {{ room.pricePerNight }} BYN за ночь
+              </span>
+
+          <strong>
+            {{ room.totalStayPrice }} BYN за весь период
+          </strong>
+
+          <button
+            type="button"
+            (click)="selectRoom(room)">
+            Выбрать
+          </button>
+
+        </div>
+
+      </article>
+
+      }
+
+    </section>
+
+    } @else if (searchPerformed()) {
+
+    <section class="results container">
+
+      <p>
+        По выбранным параметрам свободных номеров нет.
+      </p>
+
+    </section>
+
+    }
+
+
+    <section class="advantages container">
+
+      <article class="advantage">
+
+        <div class="advantage__icon">
+          🏨
+        </div>
+
+        <h2>
+          Разные отели
+        </h2>
+
+        <p>
+          Выбирайте подходящий вариант по городу, рейтингу и стоимости.
+        </p>
+
+      </article>
+
+
+      <article class="advantage">
+
+        <div class="advantage__icon">
+          📅
+        </div>
+
+        <h2>
+          Поиск по датам
+        </h2>
+
+        <p>
+          Проверяйте доступность номеров на нужный период.
+        </p>
+
+      </article>
+
+
+      <article class="advantage">
+
+        <div class="advantage__icon">
+          ✓
+        </div>
+
+        <h2>
+          Простое бронирование
+        </h2>
+
+        <p>
+          Войдите в аккаунт и оформите бронь за несколько шагов.
+        </p>
+
+      </article>
+
+    </section>
+
+  </main>
+
+
+  <!-- ===================================================== -->
+  <!-- BOOKING SELECTION / CONFIRMATION BEFORE POST -->
+  <!-- ===================================================== -->
+
+  @if (selectedRoomForBooking(); as room) {
+
+  <div class="booking-modal-backdrop">
+
+    <div class="booking-modal">
+
+      <h2>
+        Подтвердите бронирование
+      </h2>
+
+
+      <div class="booking-modal__hotel">
+
+        <h3>
+
+          {{ room.hotelName }}
+
+          <span class="hotel-stars">
+              {{ getStars(room.hotelStars) }}
+            </span>
+
+        </h3>
+
+        <p>
+          {{ room.hotelAddress }}
+        </p>
+
+      </div>
+
+
+      <div class="booking-modal__details">
+
+        <div>
+
+            <span>
+              Даты
+            </span>
+
+          <strong>
+            {{ checkIn }} — {{ checkOut }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+              Номер
+            </span>
+
+          <strong>
+            {{ room.roomType }} ·
+            {{ getRoomCapacity(room.roomCapacity) }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+              Цена за ночь
+            </span>
+
+          <strong>
+            {{ room.pricePerNight }} BYN
+          </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+              Общая стоимость
+            </span>
+
+          <strong>
+            {{ room.totalStayPrice }} BYN
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="booking-modal__actions">
+
+        <button
+          class="booking-modal__secondary"
+          type="button"
+          (click)="closeBookingSelection()">
+          Отмена
+        </button>
+
+        <button
+          class="booking-modal__primary"
+          type="button"
+          (click)="confirmBooking()">
+          Подтвердить бронирование
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- SUCCESSFUL BOOKING -->
+  <!-- ===================================================== -->
+
+  @if (bookingConfirmation(); as confirmation) {
+
+  <div class="booking-modal-backdrop">
+
+    <div class="booking-modal">
+
+      <div class="booking-modal__success">
+        ✓
+      </div>
+
+
+      <h2>
+        Бронирование подтверждено
+      </h2>
+
+
+      <div class="booking-modal__hotel">
+
+        <h3>
+
+          {{ confirmation.hotelName }}
+
+          <span class="hotel-stars">
+              {{ getStars(confirmation.hotelStars) }}
+            </span>
+
+        </h3>
+
+        <p>
+          {{ confirmation.hotelAddress }}
+        </p>
+
+      </div>
+
+
+      <div class="booking-modal__details">
+
+        <div>
+
+            <span>
+              Даты
+            </span>
+
+          <strong>
+            {{ confirmation.startDate }} —
+            {{ confirmation.endDate }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+              Номер
+            </span>
+
+          <strong>
+            {{ confirmation.roomType }} ·
+            {{ getRoomCapacity(confirmation.roomCapacity) }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+              Общая стоимость бронирования
+            </span>
+
+          <strong>
+            {{ confirmation.totalStayPrice }} BYN
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <p class="booking-modal__message">
+        Бронирование успешно создано.
+      </p>
+
+
+      <div class="booking-modal__actions">
+
+        <button
+          class="booking-modal__secondary"
+          type="button"
+          routerLink="/bookings">
+          Мои брони
+        </button>
+
+        <button
+          class="booking-modal__primary"
+          type="button"
+          (click)="closeBookingConfirmation()">
+          Готово
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+
+  <!-- ===================================================== -->
+  <!-- ERROR MODAL -->
+  <!-- ===================================================== -->
+
+  @if (searchError()) {
+
+  <div class="search-error-backdrop">
+
+    <div class="search-error-modal">
+
+      <div class="search-error-modal__icon">
+        !
+      </div>
+
+
+      <h2>
+        Ошибка поиска
+      </h2>
+
+
+      <p>
+        {{ searchError() }}
+      </p>
+
+
+      <button
+        type="button"
+        (click)="closeSearchError()">
+        Понятно
+      </button>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>

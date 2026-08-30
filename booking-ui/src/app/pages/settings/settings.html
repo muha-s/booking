@@ -1,0 +1,411 @@
+<div class="settings-page">
+
+  <header class="header">
+    <div class="container header__content">
+
+      <a class="logo" routerLink="/">
+        Booking
+      </a>
+
+      <div class="header__actions">
+
+        <a class="back-link" routerLink="/">
+          ← На главную
+        </a>
+
+        @if (userProfile()) {
+        <span class="user-balance">
+            {{ userProfile()?.balance }} BYN
+          </span>
+        }
+
+      </div>
+
+    </div>
+  </header>
+
+
+  <main>
+
+    <section class="settings-hero">
+      <div class="container">
+
+        <p class="settings-hero__label">
+          Личный кабинет
+        </p>
+
+        <h1>Настройки</h1>
+
+        <p class="settings-hero__description">
+          Управление личными данными и безопасностью аккаунта.
+        </p>
+
+      </div>
+    </section>
+
+
+    <section class="settings-content container">
+
+      @if (section() === 'menu') {
+
+      <div class="settings-menu">
+
+        <button
+          class="settings-menu__item"
+          type="button"
+          (click)="openSection('profile')">
+
+          <strong>Личные данные</strong>
+          <span>Имя, фамилия и телефон</span>
+
+        </button>
+
+
+        <button
+          class="settings-menu__item"
+          type="button"
+          (click)="openSection('email')">
+
+          <strong>Сменить Email</strong>
+          <span>Изменение адреса электронной почты</span>
+
+        </button>
+
+
+        <button
+          class="settings-menu__item"
+          type="button"
+          (click)="openSection('password')">
+
+          <strong>Смена пароля</strong>
+          <span>Установить новый пароль</span>
+
+        </button>
+
+
+        <button
+          class="settings-menu__item settings-menu__item--danger"
+          type="button"
+          (click)="openSection('delete')">
+
+          <strong>Удалить профиль</strong>
+          <span>Удаление аккаунта и отмена активных броней</span>
+
+        </button>
+
+      </div>
+
+      }
+
+
+      @if (section() === 'profile') {
+
+      <section class="settings-card">
+
+        <button class="section-back" type="button" (click)="backToMenu()">
+          ← Назад к настройкам
+        </button>
+
+        <div class="settings-card__header">
+          <h2>Личные данные</h2>
+          <p>Измените имя, фамилию или номер телефона.</p>
+        </div>
+
+        <div class="settings-form">
+
+          <label class="settings-field">
+            <span>Имя</span>
+            <input type="text" [(ngModel)]="firstName">
+          </label>
+
+          <label class="settings-field">
+            <span>Фамилия</span>
+            <input type="text" [(ngModel)]="lastName">
+          </label>
+
+          <label class="settings-field settings-field--full">
+            <span>Телефон</span>
+            <input type="text" [(ngModel)]="phone">
+          </label>
+
+        </div>
+
+        @if (profileError()) {
+        <div class="settings-error">
+          {{ profileError() }}
+        </div>
+        }
+
+        <div class="settings-card__actions">
+
+          <button
+            class="primary-button"
+            type="button"
+            [disabled]="!profileChanged()"
+            (click)="updateProfile()">
+            Сохранить изменения
+          </button>
+
+        </div>
+
+      </section>
+
+      }
+
+
+      @if (section() === 'email') {
+
+      <section class="settings-card">
+
+        <button class="section-back" type="button" (click)="backToMenu()">
+          ← Назад к настройкам
+        </button>
+
+        <div class="settings-card__header">
+          <h2>Смена Email</h2>
+          <p>Введите новый адрес электронной почты.</p>
+        </div>
+
+        <div class="settings-form">
+
+          <label class="settings-field settings-field--full">
+            <span>Новый Email</span>
+
+            <input
+              type="email"
+              [(ngModel)]="email"
+              [disabled]="emailLoading()"
+              placeholder="Введите новый email">
+          </label>
+
+        </div>
+
+        <div class="settings-info">
+          На новый адрес будет отправлено письмо для подтверждения.
+          После изменения потребуется войти в аккаунт заново.
+        </div>
+
+        @if (emailError()) {
+        <div class="settings-error">
+          {{ emailError() }}
+        </div>
+        }
+
+        <div class="settings-card__actions">
+
+          <button
+            class="primary-button"
+            type="button"
+            [disabled]="!emailFormFilled() || emailLoading()"
+            (click)="updateEmail()">
+
+            @if (emailLoading()) {
+            Изменение...
+            } @else {
+            Изменить Email
+            }
+
+          </button>
+
+        </div>
+
+      </section>
+
+      }
+
+
+      @if (section() === 'password') {
+
+      <section class="settings-card">
+
+        <button class="section-back" type="button" (click)="backToMenu()">
+          ← Назад к настройкам
+        </button>
+
+        <div class="settings-card__header">
+          <h2>Смена пароля</h2>
+          <p>Укажите текущий пароль и придумайте новый.</p>
+        </div>
+
+        <div class="settings-form">
+
+          <label class="settings-field settings-field--full">
+            <span>Текущий пароль</span>
+            <input type="password" [(ngModel)]="currentPassword">
+          </label>
+
+          <label class="settings-field">
+            <span>Новый пароль</span>
+            <input type="password" [(ngModel)]="newPassword">
+          </label>
+
+          <label class="settings-field">
+            <span>Повторите новый пароль</span>
+            <input type="password" [(ngModel)]="confirmPassword">
+          </label>
+
+        </div>
+
+        <div class="settings-info">
+          Пароль должен содержать от 8 до 100 символов,
+          минимум одну букву и одну цифру.
+        </div>
+
+        @if (passwordError()) {
+        <div class="settings-error">
+          {{ passwordError() }}
+        </div>
+        }
+
+        <div class="settings-card__actions">
+
+          <button
+            class="primary-button"
+            type="button"
+            [disabled]="!passwordFormFilled()"
+            (click)="updatePassword()">
+            Изменить пароль
+          </button>
+
+        </div>
+
+      </section>
+
+      }
+
+
+      @if (section() === 'delete') {
+
+      <section class="settings-card settings-card--danger">
+
+        <button class="section-back" type="button" (click)="backToMenu()">
+          ← Назад к настройкам
+        </button>
+
+        <div class="settings-card__header">
+          <h2>Удаление профиля</h2>
+          <p>Это действие удалит ваш аккаунт.</p>
+        </div>
+
+        <div class="delete-warning">
+
+          <strong>Обратите внимание</strong>
+
+          <p>
+            После удаления профиль больше не будет доступен.
+            Активные бронирования будут отменены.
+          </p>
+
+        </div>
+
+        @if (deleteError()) {
+        <div class="settings-error">
+          {{ deleteError() }}
+        </div>
+        }
+
+        <div class="settings-card__actions">
+
+          <button
+            class="delete-button"
+            type="button"
+            (click)="deleteProfile()">
+            Удалить профиль
+          </button>
+
+        </div>
+
+      </section>
+
+      }
+
+    </section>
+
+  </main>
+
+
+  @if (profileSaved()) {
+
+  <div class="success-modal-backdrop">
+
+    <div class="success-modal">
+
+      <div class="success-modal__icon">✓</div>
+
+      <h2>Данные сохранены</h2>
+
+      <p>
+        Изменения личных данных успешно сохранены.
+      </p>
+
+      <button
+        class="primary-button"
+        type="button"
+        (click)="closeProfileSaved()">
+        Готово
+      </button>
+
+    </div>
+
+  </div>
+
+  }
+
+
+  @if (passwordSaved()) {
+
+  <div class="success-modal-backdrop">
+
+    <div class="success-modal">
+
+      <div class="success-modal__icon">✓</div>
+
+      <h2>Пароль успешно изменён</h2>
+
+      <p>
+        Новый пароль сохранён и будет использоваться при следующем входе.
+      </p>
+
+      <button
+        class="primary-button"
+        type="button"
+        (click)="closePasswordSaved()">
+        Готово
+      </button>
+
+    </div>
+
+  </div>
+
+  }
+
+
+  @if (emailSaved()) {
+
+  <div class="success-modal-backdrop">
+
+    <div class="success-modal">
+
+      <div class="success-modal__icon">✓</div>
+
+      <h2>Email изменён</h2>
+
+      <p>
+        На новый адрес отправлено письмо для подтверждения.
+        После подтверждения войдите в аккаунт с новым Email.
+      </p>
+
+      <button
+        class="primary-button"
+        type="button"
+        (click)="finishEmailUpdate()">
+        Перейти ко входу
+      </button>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>

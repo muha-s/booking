@@ -4,7 +4,7 @@ import com.gmail.muha.booking.dto.hotel.HotelCreateDto;
 import com.gmail.muha.booking.dto.hotel.HotelFullDto;
 import com.gmail.muha.booking.dto.hotel.HotelShortDto;
 import com.gmail.muha.booking.dto.hotel.HotelUpdateDto;
-import com.gmail.muha.booking.service.HotelService;
+import com.gmail.muha.booking.service.hotel.HotelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

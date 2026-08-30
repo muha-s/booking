@@ -20,15 +20,17 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
-
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -37,33 +39,67 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http, JwtAuthenticationConverter jwtAuthenticationConverter) throws Exception {
+            HttpSecurity http,
+            JwtAuthenticationConverter jwtAuthenticationConverter,
+            CorsConfigurationSource corsConfigurationSource) throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(
-                                SessionCreationPolicy.STATELESS
-                        )
-                )
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
+
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/users")
-                        .hasRole(UserRole.SUPER_ADMIN.name())
-                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.POST, "/users/verify-email").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/users/me")
+                        .hasRole(UserRole.USER.name())
+
+                        .requestMatchers(HttpMethod.PUT, "/users/me", "/users/me/**")
+                        .hasRole(UserRole.USER.name())
+
+                        .requestMatchers(HttpMethod.DELETE, "/users/me")
+                        .hasRole(UserRole.USER.name())
+
+                        .requestMatchers(HttpMethod.GET, "/cities", "/cities/**").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/rooms/available").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/bookings/my", "/bookings/my/**")
+                        .hasRole(UserRole.USER.name())
+
+                        .requestMatchers(HttpMethod.POST, "/bookings")
+                        .hasRole(UserRole.USER.name())
+
+                        .requestMatchers(HttpMethod.PUT, "/bookings/my/**")
+                        .hasRole(UserRole.USER.name())
+
+                        .requestMatchers(HttpMethod.DELETE, "/bookings/my/**")
+                        .hasRole(UserRole.USER.name())
+
+                        .requestMatchers(HttpMethod.POST, "/hotel-reviews")
+                        .hasRole(UserRole.USER.name())
+
+                        .requestMatchers(HttpMethod.GET, "/hotel-reviews/hotel/**")
+                        .hasRole(UserRole.USER.name())
+
+                        .anyRequest().denyAll()
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt
-                                .jwtAuthenticationConverter(jwtAuthenticationConverter)
-                        )
-                );
+                .oauth2ResourceServer(oauth2 ->
+                        oauth2.jwt(jwt ->
+                                jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)));
+
         return http.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
 
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
 
@@ -73,45 +109,48 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecretKey jwtSecretKey(
-            @Value("${app.jwt.secret}") String secret) {
-
-        return new SecretKeySpec(
-                secret.getBytes(StandardCharsets.UTF_8),
-                "HmacSHA256"
-        );
+    public SecretKey jwtSecretKey(@Value("${app.jwt.secret}") String secret) {
+        return new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
     }
 
     @Bean
     public JwtEncoder jwtEncoder(SecretKey secretKey) {
-        return NimbusJwtEncoder
-                .withSecretKey(secretKey)
-                .build();
+        return NimbusJwtEncoder.withSecretKey(secretKey).build();
     }
 
     @Bean
     public JwtDecoder jwtDecoder(SecretKey secretKey) {
-        return NimbusJwtDecoder
-                .withSecretKey(secretKey)
-                .build();
+        return NimbusJwtDecoder.withSecretKey(secretKey).build();
     }
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
 
-        JwtGrantedAuthoritiesConverter authoritiesConverter =
-                new JwtGrantedAuthoritiesConverter();
+        JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
         authoritiesConverter.setAuthoritiesClaimName("roles");
         authoritiesConverter.setAuthorityPrefix("");
 
-        JwtAuthenticationConverter authenticationConverter =
-                new JwtAuthenticationConverter();
+        JwtAuthenticationConverter authenticationConverter = new JwtAuthenticationConverter();
 
-        authenticationConverter.setJwtGrantedAuthoritiesConverter(
-                authoritiesConverter
-        );
+        authenticationConverter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
 
         return authenticationConverter;
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 }
