@@ -1,12 +1,12 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { UserService } from '../../services/user';
+import { UserEmailUpdate } from '../../models/user/user-email-update';
+import { UserPasswordUpdate } from '../../models/user/user-password-update';
+import { UserProfile } from '../../models/user/user-profile';
+import { UserUpdate } from '../../models/user/user-update';
 import { AuthService } from '../../services/auth';
-import { UserProfile } from '../../models/user-profile';
-import { UserUpdate } from '../../models/user-update';
-import { UserPasswordUpdate } from '../../models/user-password-update';
-import { UserEmailUpdate } from '../../models/user-email-update';
+import { UserService } from '../../services/user';
 
 type SettingsSection = 'menu' | 'profile' | 'email' | 'password' | 'delete';
 
@@ -32,6 +32,8 @@ export class Settings implements OnInit {
   emailLoading = signal(false);
 
   deleteError = signal('');
+  deleteConfirmationOpen = signal(false);
+  deletingProfile = signal(false);
 
   firstName = '';
   lastName = '';
@@ -237,21 +239,38 @@ export class Settings implements OnInit {
 
   deleteProfile(): void {
     this.deleteError.set('');
+    this.deleteConfirmationOpen.set(true);
+  }
 
-    const confirmed = confirm(
-      'Вы действительно хотите удалить профиль? Активные бронирования будут отменены.'
-    );
-
-    if (!confirmed) {
+  closeDeleteConfirmation(): void {
+    if (this.deletingProfile()) {
       return;
     }
 
+    this.deleteConfirmationOpen.set(false);
+    this.deleteError.set('');
+  }
+
+  confirmDeleteProfile(): void {
+    if (this.deletingProfile()) {
+      return;
+    }
+
+    this.deleteError.set('');
+    this.deletingProfile.set(true);
+
     this.userService.deleteProfile().subscribe({
       next: () => {
+        this.deletingProfile.set(false);
+        this.deleteConfirmationOpen.set(false);
+
         this.authService.logout();
         this.router.navigate(['/']);
       },
+
       error: error => {
+        this.deletingProfile.set(false);
+
         this.deleteError.set(
           error.error?.message ?? 'Не удалось удалить профиль'
         );

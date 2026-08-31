@@ -12,11 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -32,13 +28,8 @@ public class AuthenticationController {
     public LoginResponseDto login(
             @Valid @RequestBody LoginRequestDto request) {
 
-        Authentication authentication =
-                authenticationManager.authenticate(
-                        UsernamePasswordAuthenticationToken.unauthenticated(
-                                request.getEmail(),
-                                request.getPassword()
-                        )
-                );
+        Authentication authentication = authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken.unauthenticated(request.getEmail(), request.getPassword()));
 
         String token = jwtService.generateToken(authentication);
         UserRole role = getRole(authentication);
@@ -56,12 +47,11 @@ public class AuthenticationController {
         String authority = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .filter(Objects::nonNull)
+                .filter(value -> value.startsWith("ROLE_"))
                 .findFirst()
                 .orElseThrow(() ->
                         new AuthenticationRoleException("Authenticated user has no role"));
 
-        return UserRole.valueOf(
-                authority.replace("ROLE_", "")
-        );
+        return UserRole.valueOf(authority.replace("ROLE_", ""));
     }
 }

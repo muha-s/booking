@@ -5,6 +5,7 @@ import com.gmail.muha.booking.model.entity.User;
 import com.gmail.muha.booking.model.entity.enums.UserRole;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -14,23 +15,6 @@ public class UserMapper {
 
     public UserMapper(ShortDtoMapper shortDtoMapper) {
         this.shortDtoMapper = shortDtoMapper;
-    }
-
-    public UserFullDto toFullDto(User user) {
-
-        UserFullDto userFullDto = new UserFullDto();
-
-        userFullDto.setId(user.getId());
-        userFullDto.setRole(user.getRole());
-        userFullDto.setFirstName(user.getFirstName());
-        userFullDto.setLastName(user.getLastName());
-        userFullDto.setPhone(user.getPhone());
-        userFullDto.setEmail(user.getEmail());
-        userFullDto.setBalance(user.getBalance());
-        userFullDto.setBookings(shortDtoMapper.toBookingShortDtoList(user.getBookings()));
-        userFullDto.setManagedHotels(shortDtoMapper.toHotelShortDtoSet(user.getManagedHotels()));
-
-        return userFullDto;
     }
 
     public UserProfileDto toUserProfileDto(User user) {
@@ -47,15 +31,17 @@ public class UserMapper {
         return userProfileDto;
     }
 
-    public UserShortDto toShortDto(User user) {
-        UserShortDto userShortDto = new UserShortDto();
+    public UserSummaryDto toUserSummaryDto(User user) {
+        UserSummaryDto userSummaryDto = new UserSummaryDto();
 
-        userShortDto.setId(user.getId());
-        userShortDto.setRole(user.getRole());
-        userShortDto.setFirstName(user.getFirstName());
-        userShortDto.setLastName(user.getLastName());
-        userShortDto.setPhone(user.getPhone());
-        return userShortDto;
+        userSummaryDto.setId(user.getId());
+        userSummaryDto.setRole(user.getRole());
+        userSummaryDto.setFirstName(user.getFirstName());
+        userSummaryDto.setLastName(user.getLastName());
+        userSummaryDto.setPhone(user.getPhone());
+        userSummaryDto.setEmail(user.getEmail());
+        userSummaryDto.setDeletedAt(user.getDeletedAt());
+        return userSummaryDto;
     }
 
     public User toEntity(UserCreateDto userCreateDto) {
@@ -68,6 +54,19 @@ public class UserMapper {
         user.setEmail(userCreateDto.getEmail());
         user.setPassword(userCreateDto.getPassword());
         user.setBalance(userCreateDto.getInitialBalance());
+
+        return user;
+    }
+
+    public User toEntity(HotelAdminCreateDto hotelAdminCreateDto) {
+        User user = new User();
+
+        user.setRole(UserRole.HOTEL_ADMIN);
+        user.setFirstName(hotelAdminCreateDto.getFirstName());
+        user.setLastName(hotelAdminCreateDto.getLastName());
+        user.setPhone(hotelAdminCreateDto.getPhone());
+        user.setEmail(hotelAdminCreateDto.getEmail());
+        user.setBalance(BigDecimal.ZERO);
 
         return user;
     }
@@ -88,9 +87,23 @@ public class UserMapper {
 
     }
 
-    public List<UserShortDto> toShortDtoList(List<User> users) {
+    public List<UserSummaryDto> toUserSummaryDtoList(List<User> users) {
         return users.stream()
-                .map(this::toShortDto)
+                .map(this::toUserSummaryDto)
                 .toList();
+    }
+
+    public HotelAdminDto toHotelAdminDto(User user) {
+        HotelAdminDto hotelAdminDto = new HotelAdminDto();
+
+        hotelAdminDto.setId(user.getId());
+        hotelAdminDto.setFirstName(user.getFirstName());
+        hotelAdminDto.setLastName(user.getLastName());
+        hotelAdminDto.setPhone(user.getPhone());
+        hotelAdminDto.setEmail(user.getEmail());
+        hotelAdminDto.setEmailVerified(user.isEmailVerified());
+        hotelAdminDto.setManagedHotels(shortDtoMapper.toHotelShortDtoSet(user.getManagedHotels()));
+
+        return hotelAdminDto;
     }
 }

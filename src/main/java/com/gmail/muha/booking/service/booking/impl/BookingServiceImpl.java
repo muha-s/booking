@@ -36,30 +36,17 @@ public class BookingServiceImpl implements BookingService {
     private final BookingPreparationService bookingPreparationService;
     private final BookingCancellationService bookingCancellationService;
 
-    @Override
-    public BookingFullDto findById(Long id) {
-        return bookingMapper.toFullDto(findEntityById(id));
-    }
-
-    @Override
-    public Booking findEntityById(Long id) {
-        return bookingRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Booking was not found by id: " + id));
-    }
-
-    @Override
-    public List<BookingShortDto> findAll() {
-        return bookingMapper.toShortDtoList(bookingRepository.findAll());
-    }
-
-    @Override
-    public BookingFullDto findByIdForUser(Long id, String userEmail) {
-        return bookingMapper.toFullDto(findEntityByIdForUser(id, userEmail));
-    }
 
     @Override
     public List<BookingForUserDto> findAllByUserEmail(String userEmail) {
         return bookingMapper.toForUserDtoList(bookingRepository.findAllByUserEmail(userEmail));
+    }
+
+    @Override
+    public List<BookingManagedDto> findManagedByHotelId(Long hotelId) {
+        return bookingMapper.toManagedDtoList(
+                bookingRepository.findAllByHotelId(hotelId)
+        );
     }
 
     @Override
@@ -70,7 +57,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingFullDto create(BookingCreateDto bookingCreateDto, String userEmail) {
+    public void create(BookingCreateDto bookingCreateDto, String userEmail) {
 
         User bookingUser = userService.findEntityByEmail(userEmail);
         Hotel bookingHotel = hotelService.findEntityById(bookingCreateDto.getHotelId());
@@ -89,74 +76,6 @@ public class BookingServiceImpl implements BookingService {
         bookingHotel.setBalance(bookingHotel.getBalance().add(totalPrice));
 
         bookingRepository.save(creatingBooking);
-
-        return bookingMapper.toFullDto(creatingBooking);
-    }
-
-    @Transactional
-    @Override
-    public BookingFullDto update(Long id, BookingUpdateDto bookingUpdateDto) {
-
-        Booking updatingBooking = findEntityById(id);
-
-        if (updatingBooking.getStatus() != BookingStatus.ACTIVE) {
-            throw new BookingUpdateException("Only active bookings can be updated");
-        }
-
-        User bookingUser = updatingBooking.getUser();
-        Hotel bookingHotel = updatingBooking.getRoom().getHotel();
-
-        PreparedBookingData preparedBookingData =
-                bookingPreparationService.prepareUpdate(bookingUpdateDto, bookingHotel, bookingUser, updatingBooking);
-
-        Room selectedRoom = preparedBookingData.room();
-        BigDecimal oldPrice = updatingBooking.getTotalPrice();
-        BigDecimal newPrice = preparedBookingData.totalPrice();
-
-        bookingUser.setBalance(bookingUser.getBalance().add(oldPrice).subtract(newPrice));
-        updatingBooking.setTotalPrice(newPrice);
-        bookingHotel.setBalance(bookingHotel.getBalance().subtract(oldPrice).add(newPrice));
-
-        bookingMapper.updateEntity(bookingUpdateDto, updatingBooking, selectedRoom);
-
-        return bookingMapper.toFullDto(updatingBooking);
-    }
-
-    @Override
-    public List<Booking> findFutureActiveBookingsByUserId(Long userId) {
-        return bookingRepository.findFutureActiveBookingsByUserId(userId);
-    }
-
-    @Override
-    public List<Booking> findFutureActiveBookingsByCityId(Long cityId) {
-        return bookingRepository.findFutureActiveBookingsByCityId(cityId);
-    }
-
-    @Override
-    public List<Booking> findFutureActiveBookingsByHotelId(Long hotelId) {
-        return bookingRepository.findFutureActiveBookingsByHotelId(hotelId);
-    }
-
-    @Override
-    public List<Booking> findFutureActiveBookingsByRoomId(Long roomId) {
-        return bookingRepository.findFutureActiveBookingsByRoomId(roomId);
-    }
-
-    @Transactional
-    @Override
-    public void deleteById(Long id) {
-        Booking booking = findEntityById(id);
-        bookingCancellationService.cancelByUser(booking);
-    }
-
-    @Scheduled(cron = "0 0 1 * * *")
-    @Transactional
-    @Override
-    public void completeExpiredBookings() {
-        List<Booking> expiredBookings =
-                bookingRepository.findExpiredBookings(BookingStatus.ACTIVE, LocalDate.now());
-
-        expiredBookings.forEach(booking -> booking.setStatus(BookingStatus.COMPLETED));
     }
 
     @Override
@@ -179,7 +98,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Transactional
     @Override
-    public BookingFullDto updateForUser(Long id, BookingUpdateDto bookingUpdateDto, String userEmail) {
+    public void updateForUser(Long id, BookingUpdateDto bookingUpdateDto, String userEmail) {
 
         Booking updatingBooking = findEntityByIdForUser(id, userEmail);
 
@@ -203,6 +122,14 @@ public class BookingServiceImpl implements BookingService {
 
         bookingMapper.updateEntity(bookingUpdateDto, updatingBooking, selectedRoom);
 
-        return bookingMapper.toFullDto(updatingBooking);
+    }
+
+    @Scheduled(cron = "0 0 1 * * *")
+    @Transactional
+    public void completeExpiredBookings() {
+        List<Booking> expiredBookings =
+                bookingRepository.findExpiredBookings(BookingStatus.ACTIVE, LocalDate.now());
+
+        expiredBookings.forEach(booking -> booking.setStatus(BookingStatus.COMPLETED));
     }
 }

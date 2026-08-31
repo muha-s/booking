@@ -1,11 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UserProfile } from '../models/user-profile';
-import { UserCreate } from '../models/user-create';
-import { UserUpdate } from '../models/user-update';
-import { UserPasswordUpdate } from '../models/user-password-update';
-import { UserEmailUpdate } from '../models/user-email-update';
+import { UserCreate } from '../models/user/user-create';
+import { UserEmailUpdate } from '../models/user/user-email-update';
+import { UserPasswordUpdate } from '../models/user/user-password-update';
+import { UserProfile } from '../models/user/user-profile';
+import { UserRestore } from '../models/user/user-restore';
+import { UserRestoreRequest } from '../models/user/user-restore-request';
+import { UserUpdate } from '../models/user/user-update';
 import { AuthService } from './auth';
 
 @Injectable({
@@ -29,6 +31,20 @@ export class UserService {
 
   create(user: UserCreate): Observable<unknown> {
     return this.http.post(this.apiUrl, user);
+  }
+
+  requestRestore(userRestoreRequest: UserRestoreRequest): Observable<void> {
+    return this.http.post<void>(
+      `${this.apiUrl}/restore-request`,
+      userRestoreRequest
+    );
+  }
+
+  restore(userRestore: UserRestore): Observable<void> {
+    return this.http.post<void>(
+      `${this.apiUrl}/restore`,
+      userRestore
+    );
   }
 
   updateProfile(user: UserUpdate): Observable<UserProfile> {

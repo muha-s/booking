@@ -1,11 +1,14 @@
 package com.gmail.muha.booking.controller;
 
-import com.gmail.muha.booking.dto.room.*;
+import com.gmail.muha.booking.dto.room.RoomAvailableDto;
+import com.gmail.muha.booking.dto.room.RoomSearchCriteriaDto;
 import com.gmail.muha.booking.service.room.RoomSearchService;
-import com.gmail.muha.booking.service.room.RoomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -14,41 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RoomController {
 
-    private final RoomService roomService;
     private final RoomSearchService roomSearchService;
 
-    @GetMapping
-    public List<RoomShortDto> findAll() {
-        return roomService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public RoomFullDto findById(@PathVariable Long id) {
-        return roomService.findById(id);
-    }
-
     @GetMapping("/available")
-    public List<RoomAvailableDto> findAvailableRooms(@Valid @ModelAttribute RoomSearchCriteriaDto roomSearchCriteriaDto) {
+    public List<RoomAvailableDto> findAvailableRooms(
+            @Valid @ModelAttribute RoomSearchCriteriaDto roomSearchCriteriaDto) {
+
         return roomSearchService.findAvailableRooms(roomSearchCriteriaDto);
-    }
-
-    @PostMapping
-    public RoomFullDto create(@Valid @RequestBody RoomCreateDto roomCreateDto) {
-        return roomService.create(roomCreateDto);
-    }
-
-    @PostMapping("/batch")
-    public List<RoomShortDto> createRooms(@Valid @RequestBody RoomBatchCreateDto roomBatchCreateDto) {
-        return roomService.createRooms(roomBatchCreateDto);
-    }
-
-    @PutMapping("/{id}")
-    public RoomFullDto update(@PathVariable Long id, @Valid @RequestBody RoomUpdateDto roomUpdateDto) {
-        return roomService.update(id, roomUpdateDto);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id) {
-        roomService.deleteById(id);
     }
 }

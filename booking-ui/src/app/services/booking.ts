@@ -1,10 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { BookingCreate } from '../models/booking-create';
-import { BookingForUser } from '../models/booking-for-user';
-import { BookingForReview } from '../models/booking-for-review';
-import { BookingUpdate } from '../models/booking-update';
+import { BookingCreate } from '../models/booking/booking-create';
+import { BookingForUser } from '../models/booking/booking-for-user';
+import { BookingForReview } from '../models/booking/booking-for-review';
+import { BookingUpdate } from '../models/booking/booking-update';
 import { AuthService } from './auth';
 
 @Injectable({

@@ -1,0 +1,443 @@
+<div class="admin-page">
+
+  <header class="header">
+
+    <div class="header__content">
+
+      <div class="logo">
+        Booking
+      </div>
+
+      <div class="header__right">
+
+        <span class="admin-role">
+          SUPER ADMIN
+        </span>
+
+        <a
+          class="back-button"
+          href="/super-admin">
+          ← Панель
+        </a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <section class="hero">
+
+      <div class="container hero__content">
+
+        <div>
+
+          <p class="hero__label">
+            Панель администратора
+          </p>
+
+          <h1>
+            Администраторы отелей
+          </h1>
+
+          <p class="hero__description">
+            Создание администраторов и управление назначенными им отелями.
+          </p>
+
+        </div>
+
+        <button
+          class="create-button"
+          type="button"
+          (click)="openCreateForm()">
+          + Создать администратора
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section class="content container">
+
+      @if (successMessage()) {
+      <div class="message message--success">
+        {{ successMessage() }}
+      </div>
+      }
+
+      @if (errorMessage()) {
+      <div class="message message--error">
+        {{ errorMessage() }}
+      </div>
+      }
+
+
+      @if (showCreateForm()) {
+
+      <div class="create-card">
+
+        <div class="section-heading">
+
+          <div class="section-icon">
+            👤
+          </div>
+
+          <div>
+            <h2>Новый администратор отеля</h2>
+            <p>
+              После создания на указанный email будет отправлено приглашение.
+            </p>
+          </div>
+
+        </div>
+
+        <form
+          class="create-form"
+          (ngSubmit)="createHotelAdmin()">
+
+          <label>
+            <span>Имя</span>
+
+            <input
+              type="text"
+              name="firstName"
+              [(ngModel)]="firstName"
+              required
+              maxlength="20">
+          </label>
+
+          <label>
+            <span>Фамилия</span>
+
+            <input
+              type="text"
+              name="lastName"
+              [(ngModel)]="lastName"
+              required
+              maxlength="20">
+          </label>
+
+          <label>
+            <span>Телефон</span>
+
+            <input
+              type="tel"
+              name="phone"
+              [(ngModel)]="phone"
+              required>
+          </label>
+
+          <label>
+            <span>Email</span>
+
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              required
+              maxlength="100">
+          </label>
+
+          <div class="form-actions">
+
+            <button
+              class="secondary-button"
+              type="button"
+              (click)="closeCreateForm()">
+              Отмена
+            </button>
+
+            <button
+              class="primary-button"
+              type="submit"
+              [disabled]="isCreating()">
+
+              @if (isCreating()) {
+              Отправляем...
+              } @else {
+              Создать и отправить приглашение
+              }
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      }
+
+
+      @if (hotelAdmins().length === 0 && !errorMessage()) {
+
+      <div class="empty-state">
+
+        <div class="empty-state__icon">
+          👤
+        </div>
+
+        <h2>Администраторов пока нет</h2>
+
+        <p>
+          Создайте первого администратора отеля.
+        </p>
+
+      </div>
+
+      }
+
+
+      <div class="admins-list">
+
+        @for (admin of hotelAdmins(); track admin.id) {
+
+        <article class="admin-card">
+
+          <div class="admin-card__header">
+
+            <div class="admin-title">
+
+              <div class="admin-avatar">
+                👤
+              </div>
+
+              <div>
+
+                <h2>
+                  {{ admin.firstName }} {{ admin.lastName }}
+                </h2>
+
+                <span
+                  class="verification-badge"
+                  [class.verification-badge--verified]="admin.emailVerified">
+
+                    @if (admin.emailVerified) {
+                      ✓ Активирован
+                    } @else {
+                      Ожидает активации
+                    }
+
+                  </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="admin-info">
+
+            <div class="info-item">
+              <span class="info-label">Email</span>
+              <span>{{ admin.email }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Телефон</span>
+              <span>{{ admin.phone }}</span>
+            </div>
+
+            <div class="info-item">
+              <span class="info-label">Назначено отелей</span>
+              <span class="hotels-count">
+                  {{ admin.managedHotels.length }}
+                </span>
+            </div>
+
+          </div>
+
+
+          <div class="hotels-section">
+
+            <h3>
+              Отели администратора
+            </h3>
+
+            @if (admin.managedHotels.length > 0) {
+
+            <div class="managed-hotels">
+
+              @for (hotel of admin.managedHotels; track hotel.id) {
+
+              <div class="managed-hotel">
+
+                <div class="managed-hotel__icon">
+                  🏨
+                </div>
+
+                <div class="managed-hotel__info">
+
+                  <strong>
+                    {{ hotel.name }}
+                  </strong>
+
+                  <span>
+                          {{ hotel.city.name }}, {{ hotel.address }}
+                        </span>
+
+                </div>
+
+                <button
+                  class="unassign-button"
+                  type="button"
+                  (click)="unassignHotel(admin.id, hotel.id)"
+                  [disabled]="unassigningAssignment() === admin.id + '-' + hotel.id">
+
+                  @if (unassigningAssignment() === admin.id + '-' + hotel.id) {
+                  Снимаем...
+                  } @else {
+                  Снять
+                  }
+
+                </button>
+
+              </div>
+
+              }
+
+            </div>
+
+            } @else {
+
+            <p class="no-hotels">
+              Отели пока не назначены.
+            </p>
+
+            }
+
+          </div>
+
+
+          <div class="hotel-assignment">
+
+            <label>
+
+                <span>
+                  Назначить отель
+                </span>
+
+              <select
+                [name]="'hotel-' + admin.id"
+                [(ngModel)]="selectedHotelIds[admin.id]">
+
+                <option [ngValue]="null">
+                  Выберите отель
+                </option>
+
+                @for (hotel of getAvailableHotels(admin); track hotel.id) {
+
+                <option [ngValue]="hotel.id">
+                  {{ hotel.name }} — {{ hotel.city.name }}
+                </option>
+
+                }
+
+              </select>
+
+            </label>
+
+            <button
+              class="primary-button assign-button"
+              type="button"
+              (click)="assignHotel(admin.id)"
+              [disabled]="assigningAdminId() === admin.id">
+
+              @if (assigningAdminId() === admin.id) {
+              Назначаем...
+              } @else {
+              Назначить
+              }
+
+            </button>
+
+          </div>
+
+
+          <div class="admin-actions">
+
+            <button
+              class="delete-button"
+              type="button"
+              (click)="openDeleteModal(admin)">
+              Удалить администратора
+            </button>
+
+          </div>
+
+        </article>
+
+        }
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  @if (hotelAdminToDelete(); as admin) {
+
+  <div
+    class="modal-backdrop"
+    (click)="closeDeleteModal()">
+
+    <div
+      class="delete-modal"
+      (click)="$event.stopPropagation()">
+
+      <div class="delete-modal__icon">
+        !
+      </div>
+
+      <h2>
+        Удалить администратора?
+      </h2>
+
+      <p class="delete-modal__name">
+        {{ admin.firstName }} {{ admin.lastName }}
+      </p>
+
+      <p class="delete-modal__warning">
+        Администратор будет снят со всех назначенных отелей
+        и больше не сможет войти в систему.
+      </p>
+
+      <div class="delete-modal__actions">
+
+        <button
+          class="modal-cancel-button"
+          type="button"
+          [disabled]="deletingAdminId() === admin.id"
+          (click)="closeDeleteModal()">
+          Отмена
+        </button>
+
+        <button
+          class="modal-delete-button"
+          type="button"
+          [disabled]="deletingAdminId() === admin.id"
+          (click)="confirmDeleteHotelAdmin()">
+
+          @if (deletingAdminId() === admin.id) {
+          Удаляем...
+          } @else {
+          Удалить администратора
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>

@@ -1,0 +1,117 @@
+<div class="restore-page">
+
+  <header class="header">
+    <div class="container header__content">
+      <a class="logo" routerLink="/">Booking</a>
+    </div>
+  </header>
+
+  <main class="restore-main">
+    <div class="restore-card">
+
+      @if (!token) {
+
+      <h1>Восстановление аккаунта</h1>
+
+      <p class="restore-description">
+        Введите email удалённого аккаунта.
+        Мы отправим ссылку для восстановления.
+      </p>
+
+      <label class="restore-field">
+        <span>Email</span>
+
+        <input
+          type="email"
+          [(ngModel)]="email"
+          placeholder="example@mail.com">
+      </label>
+
+      @if (errorMessage()) {
+      <p class="restore-error">
+        {{ errorMessage() }}
+      </p>
+      }
+
+      @if (successMessage()) {
+      <p class="restore-success">
+        {{ successMessage() }}
+      </p>
+      }
+
+      <button
+        class="restore-button"
+        type="button"
+        [disabled]="loading()"
+        (click)="requestRestore()">
+
+        {{ loading() ? 'Отправка...' : 'Отправить ссылку' }}
+      </button>
+
+      <a class="login-link" routerLink="/login">
+        ← Вернуться ко входу
+      </a>
+
+      } @else {
+
+      <h1>Новый пароль</h1>
+
+      <p class="restore-description">
+        Создайте новый пароль для восстановленного аккаунта.
+      </p>
+
+      <label class="restore-field">
+        <span>Новый пароль</span>
+
+        <input
+          type="password"
+          [(ngModel)]="password"
+          placeholder="Не менее 8 символов">
+      </label>
+
+      <label class="restore-field">
+        <span>Повторите пароль</span>
+
+        <input
+          type="password"
+          [(ngModel)]="confirmPassword"
+          placeholder="Повторите новый пароль">
+      </label>
+
+      @if (errorMessage()) {
+      <p class="restore-error">
+        {{ errorMessage() }}
+      </p>
+      }
+
+      @if (successMessage()) {
+      <p class="restore-success">
+        {{ successMessage() }}
+      </p>
+      }
+
+      <button
+        class="restore-button"
+        type="button"
+        [disabled]="loading() || !!successMessage()"
+        (click)="restore()">
+
+        {{ loading() ? 'Восстановление...' : 'Восстановить аккаунт' }}
+      </button>
+
+      @if (successMessage()) {
+      <a class="login-link" routerLink="/login">
+        Перейти ко входу →
+      </a>
+      } @else {
+      <a class="login-link" routerLink="/login">
+        ← Вернуться ко входу
+      </a>
+      }
+
+      }
+
+    </div>
+  </main>
+
+</div>

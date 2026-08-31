@@ -1,0 +1,216 @@
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" routerLink="/hotel-admin">Booking</a>
+
+    <div class="header-right">
+      <span class="role-badge">HOTEL ADMIN</span>
+
+      <a
+        *ngIf="hotel() as currentHotel"
+        class="back-link"
+        [routerLink]="['/hotel-admin/hotels', currentHotel.id]">
+
+        ← К отелю
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero">
+    <span class="hero-label">УПРАВЛЕНИЕ КОМНАТАМИ</span>
+
+    <ng-container *ngIf="hotel() as currentHotel">
+      <h1>{{ currentHotel.name }}</h1>
+      <p>{{ currentHotel.city.name }}, {{ currentHotel.address }}</p>
+    </ng-container>
+  </section>
+
+  <div *ngIf="errorMessage()" class="error-message">
+    {{ errorMessage() }}
+  </div>
+
+  <section class="rooms-section">
+    <div class="section-heading">
+      <div>
+        <span class="section-label">КОМНАТЫ</span>
+        <h2>Номера отеля</h2>
+        <p>Всего комнат: {{ rooms().length }}</p>
+      </div>
+
+      <button
+        class="add-button"
+        type="button"
+        (click)="openAddForm()">
+
+        + Добавить комнату
+      </button>
+    </div>
+
+    <div *ngIf="showAddForm()" class="add-room-form">
+      <div class="form-heading">
+        <div>
+          <span class="section-label">НОВАЯ КОМНАТА</span>
+          <h3>Добавление комнаты</h3>
+        </div>
+
+        <button
+          class="close-button"
+          type="button"
+          (click)="closeAddForm()">
+
+          ×
+        </button>
+      </div>
+
+      <div class="form-grid">
+        <label class="form-field">
+          <span>Тип комнаты</span>
+
+          <select [(ngModel)]="newRoomType">
+            <option
+              *ngFor="let type of roomTypes"
+              [value]="type.value">
+
+              {{ type.label }}
+            </option>
+          </select>
+        </label>
+
+        <label class="form-field">
+          <span>Вместимость</span>
+
+          <select [(ngModel)]="newRoomCapacity">
+            <option
+              *ngFor="let capacity of roomCapacities"
+              [value]="capacity.value">
+
+              {{ capacity.label }}
+            </option>
+          </select>
+        </label>
+      </div>
+
+      <div *ngIf="createErrorMessage()" class="form-error">
+        {{ createErrorMessage() }}
+      </div>
+
+      <div class="form-actions">
+        <button
+          class="cancel-button"
+          type="button"
+          [disabled]="creatingRoom()"
+          (click)="closeAddForm()">
+
+          Отмена
+        </button>
+
+        <button
+          class="save-button"
+          type="button"
+          [disabled]="creatingRoom()"
+          (click)="createRoom()">
+
+          {{ creatingRoom() ? 'Добавление...' : 'Добавить комнату' }}
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="rooms().length === 0" class="empty-state">
+      В этом отеле пока нет комнат.
+    </div>
+
+    <div *ngIf="rooms().length > 0" class="rooms-grid">
+      <article
+        *ngFor="let room of rooms()"
+        class="room-card">
+
+        <div class="room-header">
+          <span class="room-number">Комната</span>
+
+          <button
+            class="delete-button"
+            type="button"
+            (click)="openDeleteModal(room)">
+
+            Удалить
+          </button>
+        </div>
+
+        <div class="room-details">
+          <div class="room-detail">
+            <span>Тип</span>
+            <strong>{{ formatRoomType(room.roomType) }}</strong>
+          </div>
+
+          <div class="room-detail">
+            <span>Вместимость</span>
+            <strong>{{ formatRoomCapacity(room.roomCapacity) }}</strong>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<div
+  *ngIf="roomToDelete() as room"
+  class="modal-backdrop">
+
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <span class="section-label">УДАЛЕНИЕ</span>
+        <h3>Удалить комнату?</h3>
+      </div>
+
+      <button
+        class="modal-close"
+        type="button"
+        [disabled]="deletingRoom()"
+        (click)="closeDeleteModal()">
+
+        ×
+      </button>
+    </div>
+
+    <p class="modal-text">
+      Комната будет удалена из отеля.
+      Все будущие активные бронирования этой комнаты будут отменены с полным возвратом средств.
+    </p>
+
+    <div class="modal-room-info">
+      <div>
+        <span>Тип</span>
+        <strong>{{ formatRoomType(room.roomType) }}</strong>
+      </div>
+
+      <div>
+        <span>Вместимость</span>
+        <strong>{{ formatRoomCapacity(room.roomCapacity) }}</strong>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button
+        class="modal-cancel"
+        type="button"
+        [disabled]="deletingRoom()"
+        (click)="closeDeleteModal()">
+
+        Отмена
+      </button>
+
+      <button
+        class="modal-delete"
+        type="button"
+        [disabled]="deletingRoom()"
+        (click)="confirmDeleteRoom()">
+
+        {{ deletingRoom() ? 'Удаление...' : 'Удалить комнату' }}
+      </button>
+    </div>
+  </div>
+</div>

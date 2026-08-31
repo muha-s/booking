@@ -2,10 +2,10 @@ import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BookingService } from '../../services/booking';
-import { BookingForUser } from '../../models/booking-for-user';
-import { BookingUpdate } from '../../models/booking-update';
+import { BookingForUser } from '../../models/booking/booking-for-user';
+import { BookingUpdate } from '../../models/booking/booking-update';
 import { UserService } from '../../services/user';
-import { UserProfile } from '../../models/user-profile';
+import { UserProfile } from '../../models/user/user-profile';
 
 @Component({
   selector: 'app-bookings',

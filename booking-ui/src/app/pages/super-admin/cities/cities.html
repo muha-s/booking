@@ -1,0 +1,297 @@
+<div class="admin-page">
+
+  <header class="header">
+
+    <div class="header__content">
+
+      <div class="logo">
+        Booking
+      </div>
+
+      <div class="header__right">
+
+        <span class="admin-role">
+          SUPER ADMIN
+        </span>
+
+        <a
+          class="back-button"
+          href="/super-admin">
+          ← Панель
+        </a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <section class="hero">
+
+      <div class="container hero__content">
+
+        <div>
+
+          <p class="hero__label">
+            Панель администратора
+          </p>
+
+          <h1>
+            Города
+          </h1>
+
+          <p class="hero__description">
+            Управление городами, в которых представлены отели Booking.
+          </p>
+
+        </div>
+
+        <button
+          class="create-button"
+          type="button"
+          (click)="openCreateForm()">
+          + Добавить город
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section class="content container">
+
+      @if (successMessage()) {
+      <div class="message message--success">
+        {{ successMessage() }}
+      </div>
+      }
+
+      @if (errorMessage()) {
+      <div class="message message--error">
+        {{ errorMessage() }}
+      </div>
+      }
+
+
+      @if (showCreateForm()) {
+
+      <div class="create-card">
+
+        <div class="section-heading">
+
+          <div class="section-icon">
+            🌍
+          </div>
+
+          <div>
+            <h2>Новый город</h2>
+
+            <p>
+              Добавьте новый город в систему Booking.
+            </p>
+          </div>
+
+        </div>
+
+
+        <form
+          class="create-form"
+          (ngSubmit)="createCity()">
+
+          <label>
+
+              <span>
+                Название города
+              </span>
+
+            <input
+              type="text"
+              name="cityName"
+              [(ngModel)]="cityName"
+              required
+              placeholder="Например, Минск">
+
+          </label>
+
+
+          <div class="form-actions">
+
+            <button
+              class="secondary-button"
+              type="button"
+              (click)="closeCreateForm()">
+              Отмена
+            </button>
+
+            <button
+              class="primary-button"
+              type="submit"
+              [disabled]="isCreating()">
+
+              @if (isCreating()) {
+              Создаём...
+              } @else {
+              Добавить город
+              }
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      }
+
+
+      <div class="section-title">
+
+        <div>
+
+          <h2>
+            Города системы
+          </h2>
+
+          <p>
+            Всего активных городов: {{ cities().length }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      @if (cities().length === 0 && !errorMessage()) {
+
+      <div class="empty-state">
+
+        <div class="empty-state__icon">
+          🌍
+        </div>
+
+        <h2>
+          Городов пока нет
+        </h2>
+
+        <p>
+          Добавьте первый город в систему.
+        </p>
+
+      </div>
+
+      } @else {
+
+      <div class="cities-grid">
+
+        @for (city of cities(); track city.id) {
+
+        <article class="city-card">
+
+          <div class="city-card__icon">
+            🌍
+          </div>
+
+          <div class="city-card__content">
+
+                <span class="city-id">
+                  ID {{ city.id }}
+                </span>
+
+            <h2>
+              {{ city.name }}
+            </h2>
+
+            <p>
+              Город доступен для размещения отелей и бронирования.
+            </p>
+
+          </div>
+
+          <div class="city-card__actions">
+
+            <button
+              class="delete-button"
+              type="button"
+              (click)="openDeleteModal(city)">
+              Удалить
+            </button>
+
+          </div>
+
+        </article>
+
+        }
+
+      </div>
+
+      }
+
+    </section>
+
+  </main>
+
+
+  @if (cityToDelete(); as city) {
+
+  <div
+    class="modal-backdrop"
+    (click)="closeDeleteModal()">
+
+    <div
+      class="delete-modal"
+      (click)="$event.stopPropagation()">
+
+      <div class="delete-modal__icon">
+        !
+      </div>
+
+      <h2>
+        Удалить город?
+      </h2>
+
+      <p class="delete-modal__city">
+        {{ city.name }}
+      </p>
+
+      <p class="delete-modal__warning">
+        Все будущие бронирования в этом городе будут отменены,
+        а средства возвращены пользователям.
+      </p>
+
+      <div class="delete-modal__actions">
+
+        <button
+          class="modal-cancel-button"
+          type="button"
+          [disabled]="deletingCityId() === city.id"
+          (click)="closeDeleteModal()">
+          Отмена
+        </button>
+
+        <button
+          class="modal-delete-button"
+          type="button"
+          [disabled]="deletingCityId() === city.id"
+          (click)="confirmDeleteCity()">
+
+          @if (deletingCityId() === city.id) {
+          Удаляем...
+          } @else {
+          Удалить город
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>

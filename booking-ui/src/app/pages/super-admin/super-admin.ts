@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-super-admin',
-  imports: [],
   templateUrl: './super-admin.html',
-  styleUrl: './super-admin.css'
+  styleUrl: './super-admin.css',
+  imports: [RouterLink],
 })
 export class SuperAdmin {
 

@@ -1,4 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LoginRequest } from '../../models/auth/login-request';
@@ -18,7 +19,8 @@ export class Login implements OnInit {
 
   constructor(
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly location: Location
   ) {
   }
 
@@ -67,6 +69,18 @@ export class Login implements OnInit {
           this.errorMessage.set('Ошибка входа');
         }
       });
+  }
+
+  register(): void {
+    this.router.navigate(['/register']);
+  }
+
+  restoreAccount(): void {
+    this.router.navigate(['/restore-account']);
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   private navigateByRole(role: string): void {

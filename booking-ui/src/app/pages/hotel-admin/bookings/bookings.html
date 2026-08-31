@@ -1,0 +1,105 @@
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" routerLink="/hotel-admin">Booking</a>
+
+    <div class="header-right">
+      <span class="role-badge">HOTEL ADMIN</span>
+
+      <a
+        *ngIf="hotel() as currentHotel"
+        class="back-link"
+        [routerLink]="['/hotel-admin/hotels', currentHotel.id]">
+
+        ← К отелю
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+
+  <section class="hero">
+    <span class="hero-label">БРОНИРОВАНИЯ ОТЕЛЯ</span>
+
+    <ng-container *ngIf="hotel() as currentHotel">
+      <h1>{{ currentHotel.name }}</h1>
+      <p>{{ currentHotel.city.name }}, {{ currentHotel.address }}</p>
+    </ng-container>
+  </section>
+
+  <div *ngIf="errorMessage()" class="error-message">
+    {{ errorMessage() }}
+  </div>
+
+  <section class="bookings-section">
+    <div class="section-heading">
+      <div>
+        <span class="section-label">БРОНИРОВАНИЯ</span>
+        <h2>Все бронирования</h2>
+        <p>Всего: {{ bookings().length }}</p>
+      </div>
+    </div>
+
+    <div *ngIf="bookings().length === 0" class="empty-state">
+      У этого отеля пока нет бронирований.
+    </div>
+
+    <div *ngIf="bookings().length > 0" class="bookings-list">
+      <article
+        *ngFor="let booking of bookings()"
+        class="booking-card">
+
+        <div class="booking-top">
+          <div>
+            <span class="guest-name">
+              {{ booking.userFirstName }} {{ booking.userLastName }}
+            </span>
+
+            <div class="guest-contacts">
+              <span>{{ booking.userEmail }}</span>
+              <span>{{ booking.userPhone }}</span>
+            </div>
+          </div>
+
+          <span
+            class="status"
+            [class.status-active]="booking.status === 'ACTIVE'"
+            [class.status-completed]="booking.status === 'COMPLETED'"
+            [class.status-cancelled]="booking.status === 'CANCELLED'">
+
+            {{ formatStatus(booking.status) }}
+          </span>
+        </div>
+
+        <div class="booking-grid">
+          <div class="booking-detail">
+            <span>Тип комнаты</span>
+            <strong>{{ formatRoomType(booking.roomType) }}</strong>
+          </div>
+
+          <div class="booking-detail">
+            <span>Вместимость</span>
+            <strong>{{ formatRoomCapacity(booking.roomCapacity) }}</strong>
+          </div>
+
+          <div class="booking-detail">
+            <span>Заезд</span>
+            <strong>{{ booking.startDate }}</strong>
+          </div>
+
+          <div class="booking-detail">
+            <span>Выезд</span>
+            <strong>{{ booking.endDate }}</strong>
+          </div>
+
+          <div class="booking-detail price-detail">
+            <span>Стоимость</span>
+            <strong>{{ booking.totalPrice }} BYN</strong>
+          </div>
+        </div>
+
+      </article>
+    </div>
+  </section>
+
+</main>

@@ -3,6 +3,8 @@ package com.gmail.muha.booking.model.entity;
 import com.gmail.muha.booking.model.entity.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -49,9 +51,13 @@ public class User {
     private Instant deletedAt;
 
     @OneToMany(mappedBy = "user")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<Booking> bookings = new ArrayList<>();
 
     @ManyToMany(mappedBy = "admins")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<Hotel> managedHotels = new HashSet<>();
 
     @Column(name = "email_verified", nullable = false)

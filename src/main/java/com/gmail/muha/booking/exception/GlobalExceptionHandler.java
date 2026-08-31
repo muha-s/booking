@@ -106,6 +106,17 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(HotelAdminActivationException.class)
+    public ResponseEntity<ApiError> handleHotelAdminActivationException(
+            HotelAdminActivationException exception, HttpServletRequest request) {
+
+        return buildErrorResponse(
+                exception.getMessage(),
+                request,
+                HttpStatus.BAD_REQUEST
+        );
+    }
+
     private ResponseEntity<ApiError> buildErrorResponse(
             String message, HttpServletRequest request, HttpStatus status) {
 

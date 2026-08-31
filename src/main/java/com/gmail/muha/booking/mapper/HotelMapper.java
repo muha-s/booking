@@ -1,9 +1,6 @@
 package com.gmail.muha.booking.mapper;
 
-import com.gmail.muha.booking.dto.hotel.HotelCreateDto;
-import com.gmail.muha.booking.dto.hotel.HotelFullDto;
-import com.gmail.muha.booking.dto.hotel.HotelShortDto;
-import com.gmail.muha.booking.dto.hotel.HotelUpdateDto;
+import com.gmail.muha.booking.dto.hotel.*;
 import com.gmail.muha.booking.model.entity.City;
 import com.gmail.muha.booking.model.entity.Hotel;
 import org.springframework.stereotype.Component;
@@ -19,35 +16,35 @@ public class HotelMapper {
         this.shortDtoMapper = shortDtoMapper;
     }
 
-    public HotelFullDto toFullDto(Hotel hotel) {
 
-        HotelFullDto hotelFullDto = new HotelFullDto();
+    public HotelManagedFullDto toManagedFullDto(Hotel hotel) {
+        HotelManagedFullDto hotelManagedFullDto = new HotelManagedFullDto();
 
-        hotelFullDto.setId(hotel.getId());
-        hotelFullDto.setName(hotel.getName());
-        hotelFullDto.setCity(shortDtoMapper.toCityShortDto(hotel.getCity()));
-        hotelFullDto.setAddress(hotel.getAddress());
-        hotelFullDto.setNumberOfStars(hotel.getNumberOfStars());
-        hotelFullDto.setRating(hotel.getRating());
-        hotelFullDto.setBasePricePerNight(hotel.getBasePricePerNight());
-        hotelFullDto.setBalance(hotel.getBalance());
-        hotelFullDto.setRooms(shortDtoMapper.toRoomShortDtoList(hotel.getRooms()));
+        hotelManagedFullDto.setId(hotel.getId());
+        hotelManagedFullDto.setName(hotel.getName());
+        hotelManagedFullDto.setCity(shortDtoMapper.toCityShortDto(hotel.getCity()));
+        hotelManagedFullDto.setAddress(hotel.getAddress());
+        hotelManagedFullDto.setNumberOfStars(hotel.getNumberOfStars());
+        hotelManagedFullDto.setRating(hotel.getRating());
+        hotelManagedFullDto.setBasePricePerNight(hotel.getBasePricePerNight());
+        hotelManagedFullDto.setBalance(hotel.getBalance());
 
-        return hotelFullDto;
+        return hotelManagedFullDto;
     }
 
     public HotelShortDto toShortDto(Hotel hotel) {
-        HotelShortDto hotelShortDto = new HotelShortDto();
+        return shortDtoMapper.toHotelShortDto(hotel);
+    }
 
-        hotelShortDto.setId(hotel.getId());
-        hotelShortDto.setName(hotel.getName());
-        hotelShortDto.setCity(shortDtoMapper.toCityShortDto(hotel.getCity()));
-        hotelShortDto.setAddress(hotel.getAddress());
-        hotelShortDto.setNumberOfStars(hotel.getNumberOfStars());
-        hotelShortDto.setRating(hotel.getRating());
-        hotelShortDto.setBasePricePerNight(hotel.getBasePricePerNight());
+    public HotelManagedDto toManagedDto(Hotel hotel) {
+        HotelManagedDto hotelManagedDto = new HotelManagedDto();
 
-        return hotelShortDto;
+        hotelManagedDto.setId(hotel.getId());
+        hotelManagedDto.setName(hotel.getName());
+        hotelManagedDto.setCity(shortDtoMapper.toCityShortDto(hotel.getCity()));
+        hotelManagedDto.setAddress(hotel.getAddress());
+
+        return hotelManagedDto;
     }
 
     public Hotel toEntity(HotelCreateDto hotelCreateDto, City hotelCity) {

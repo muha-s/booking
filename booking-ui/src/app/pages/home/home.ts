@@ -8,10 +8,10 @@ import { RoomSearchService } from '../../services/room-search';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { UserService } from '../../services/user';
-import { UserProfile } from '../../models/user-profile';
+import { UserProfile } from '../../models/user/user-profile';
 import { BookingService } from '../../services/booking';
-import { BookingCreate } from '../../models/booking-create';
-import { BookingConfirmation } from '../../models/booking-confirmation';
+import { BookingCreate } from '../../models/booking/booking-create';
+import { BookingConfirmation } from '../../models/booking/booking-confirmation';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -66,12 +66,9 @@ export class Home implements OnInit {
             this.userProfile.set(profile);
           },
 
-          error: (error: HttpErrorResponse) => {
-
-            if (error.status === 401 || error.status === 403 || error.status === 404) {
-              this.authService.logout();
-              this.userProfile.set(null);
-            }
+          error: () => {
+            this.authService.logout();
+            this.userProfile.set(null);
           }
         });
     }

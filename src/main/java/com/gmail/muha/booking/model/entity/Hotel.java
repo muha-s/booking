@@ -3,6 +3,8 @@ package com.gmail.muha.booking.model.entity;
 import com.gmail.muha.booking.model.entity.enums.NumberOfStars;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -25,6 +27,8 @@ public class Hotel {
 
     @ManyToOne
     @JoinColumn(name = "city_id", nullable = false)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private City city;
 
     @Column(nullable = false)
@@ -47,12 +51,16 @@ public class Hotel {
     private Instant deletedAt;
 
     @OneToMany(mappedBy = "hotel")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<Room> rooms = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "hotels_admins",
+    @JoinTable(
+            name = "hotels_admins",
             joinColumns = @JoinColumn(name = "hotel_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Set<User> admins = new HashSet<>();
 }

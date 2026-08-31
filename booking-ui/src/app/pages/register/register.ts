@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UserCreate } from '../../models/user-create';
+import { UserCreate } from '../../models/user/user-create';
 import { UserService } from '../../services/user';
 import { AuthService } from '../../services/auth';
 

@@ -51,11 +51,26 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
 
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-
                         .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
 
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/verify-email").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/restore-request").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/restore").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/hotel-admin/activate").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/hotel-admin/hotels", "/hotel-admin/hotels/**")
+                        .hasRole(UserRole.HOTEL_ADMIN.name())
+
+                        .requestMatchers(HttpMethod.POST, "/hotel-admin/hotels/**")
+                        .hasRole(UserRole.HOTEL_ADMIN.name())
+
+                        .requestMatchers(HttpMethod.PUT, "/hotel-admin/hotels/**")
+                        .hasRole(UserRole.HOTEL_ADMIN.name())
+
+                        .requestMatchers(HttpMethod.DELETE, "/hotel-admin/hotels/**")
+                        .hasRole(UserRole.HOTEL_ADMIN.name())
 
                         .requestMatchers(HttpMethod.GET, "/users/me")
                         .hasRole(UserRole.USER.name())
@@ -66,7 +81,21 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/users/me")
                         .hasRole(UserRole.USER.name())
 
-                        .requestMatchers(HttpMethod.GET, "/cities", "/cities/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/cities").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/cities")
+                        .hasRole(UserRole.SUPER_ADMIN.name())
+
+                        .requestMatchers(HttpMethod.DELETE, "/cities/**")
+                        .hasRole(UserRole.SUPER_ADMIN.name())
+
+                        .requestMatchers(HttpMethod.GET, "/hotels").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/hotels")
+                        .hasRole(UserRole.SUPER_ADMIN.name())
+
+                        .requestMatchers(HttpMethod.DELETE, "/hotels/**")
+                        .hasRole(UserRole.SUPER_ADMIN.name())
 
                         .requestMatchers(HttpMethod.GET, "/rooms/available").permitAll()
 
@@ -88,6 +117,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/hotel-reviews/hotel/**")
                         .hasRole(UserRole.USER.name())
 
+                        .requestMatchers("/super-admin/**")
+                        .hasRole(UserRole.SUPER_ADMIN.name())
+
                         .anyRequest().denyAll()
                 )
                 .oauth2ResourceServer(oauth2 ->
@@ -98,10 +130,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+    public AuthenticationManager authenticationManager(
+            UserDetailsService userDetailsService,
             PasswordEncoder passwordEncoder) {
 
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+        DaoAuthenticationProvider authenticationProvider =
+                new DaoAuthenticationProvider(userDetailsService);
 
         authenticationProvider.setPasswordEncoder(passwordEncoder);
 
@@ -110,7 +144,10 @@ public class SecurityConfig {
 
     @Bean
     public SecretKey jwtSecretKey(@Value("${app.jwt.secret}") String secret) {
-        return new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+        return new SecretKeySpec(
+                secret.getBytes(StandardCharsets.UTF_8),
+                "HmacSHA256"
+        );
     }
 
     @Bean
@@ -126,14 +163,18 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
 
-        JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+        JwtGrantedAuthoritiesConverter authoritiesConverter =
+                new JwtGrantedAuthoritiesConverter();
 
         authoritiesConverter.setAuthoritiesClaimName("roles");
         authoritiesConverter.setAuthorityPrefix("");
 
-        JwtAuthenticationConverter authenticationConverter = new JwtAuthenticationConverter();
+        JwtAuthenticationConverter authenticationConverter =
+                new JwtAuthenticationConverter();
 
-        authenticationConverter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+        authenticationConverter.setJwtGrantedAuthoritiesConverter(
+                authoritiesConverter
+        );
 
         return authenticationConverter;
     }
@@ -143,11 +184,18 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedOrigins(
+                List.of("http://localhost:4200")
+        );
+
+        configuration.setAllowedMethods(
+                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        );
+
         configuration.setAllowedHeaders(List.of("*"));
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
 
         source.registerCorsConfiguration("/**", configuration);
 

@@ -1,0 +1,534 @@
+<div class="admin-page">
+
+  <header class="header">
+
+    <div class="header__content">
+
+      <div class="logo">
+        Booking
+      </div>
+
+      <div class="header__right">
+
+        <span class="admin-role">
+          SUPER ADMIN
+        </span>
+
+        <a
+          class="back-button"
+          href="/super-admin">
+          ← Панель
+        </a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <section class="hero">
+
+      <div class="container hero__content">
+
+        <div>
+
+          <p class="hero__label">
+            Панель администратора
+          </p>
+
+          <h1>
+            Отели
+          </h1>
+
+          <p class="hero__description">
+            Создание и управление отелями системы Booking.
+          </p>
+
+        </div>
+
+        <button
+          class="create-button"
+          type="button"
+          (click)="openCreateForm()">
+          + Добавить отель
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section class="content container">
+
+      @if (successMessage()) {
+      <div class="message message--success">
+        {{ successMessage() }}
+      </div>
+      }
+
+      @if (errorMessage()) {
+      <div class="message message--error">
+        {{ errorMessage() }}
+      </div>
+      }
+
+
+      @if (showCreateForm()) {
+
+      <div class="create-card">
+
+        <div class="section-heading">
+
+          <div class="section-icon">
+            🏨
+          </div>
+
+          <div>
+
+            <h2>
+              Новый отель
+            </h2>
+
+            <p>
+              Заполните основные данные нового отеля.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <form
+          class="create-form"
+          (ngSubmit)="createHotel()">
+
+          <label>
+
+              <span>
+                Название
+              </span>
+
+            <input
+              type="text"
+              name="name"
+              [(ngModel)]="name"
+              required
+              minlength="2"
+              maxlength="30"
+              placeholder="Например, Booking Plaza">
+
+          </label>
+
+
+          <label>
+
+              <span>
+                Город
+              </span>
+
+            <select
+              name="cityId"
+              [(ngModel)]="cityId"
+              required>
+
+              <option [ngValue]="null">
+                Выберите город
+              </option>
+
+              @for (city of cities(); track city.id) {
+
+              <option [ngValue]="city.id">
+                {{ city.name }}
+              </option>
+
+              }
+
+            </select>
+
+          </label>
+
+
+          <label>
+
+              <span>
+                Адрес
+              </span>
+
+            <input
+              type="text"
+              name="address"
+              [(ngModel)]="address"
+              required
+              minlength="5"
+              maxlength="50"
+              placeholder="ул. Центральная, 10">
+
+          </label>
+
+
+          <label>
+
+              <span>
+                Категория
+              </span>
+
+            <select
+              name="numberOfStars"
+              [(ngModel)]="numberOfStars"
+              required>
+
+              <option [ngValue]="null">
+                Выберите категорию
+              </option>
+
+              <option value="ONE_STAR">
+                1 ★
+              </option>
+
+              <option value="TWO_STARS">
+                2 ★
+              </option>
+
+              <option value="THREE_STARS">
+                3 ★
+              </option>
+
+              <option value="THREE_STARS_PLUS">
+                3+ ★
+              </option>
+
+              <option value="FOUR_STARS">
+                4 ★
+              </option>
+
+              <option value="FOUR_STARS_PLUS">
+                4+ ★
+              </option>
+
+              <option value="FIVE_STARS">
+                5 ★
+              </option>
+
+              <option value="FIVE_STARS_PLUS">
+                5+ ★
+              </option>
+
+            </select>
+
+          </label>
+
+
+          <label class="price-field">
+
+              <span>
+                Базовая цена за ночь, BYN
+              </span>
+
+            <input
+              type="number"
+              name="basePricePerNight"
+              [(ngModel)]="basePricePerNight"
+              required
+              min="0.01"
+              step="0.01"
+              placeholder="150">
+
+          </label>
+
+
+          <div class="form-actions">
+
+            <button
+              class="secondary-button"
+              type="button"
+              (click)="closeCreateForm()">
+              Отмена
+            </button>
+
+            <button
+              class="primary-button"
+              type="submit"
+              [disabled]="isCreating()">
+
+              @if (isCreating()) {
+              Создаём...
+              } @else {
+              Добавить отель
+              }
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+      }
+
+
+      <div class="section-title">
+
+        <div>
+
+          <h2>
+            Отели системы
+          </h2>
+
+          <p>
+            Всего активных отелей: {{ hotels().length }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      @if (hotels().length === 0 && !errorMessage()) {
+
+      <div class="empty-state">
+
+        <div class="empty-state__icon">
+          🏨
+        </div>
+
+        <h2>
+          Отелей пока нет
+        </h2>
+
+        <p>
+          Добавьте первый отель в систему.
+        </p>
+
+      </div>
+
+      } @else {
+
+      <div class="hotels-grid">
+
+        @for (hotel of hotels(); track hotel.id) {
+
+        <article class="hotel-card">
+
+          <div class="hotel-card__header">
+
+            <div class="hotel-card__icon">
+              🏨
+            </div>
+
+            <div class="hotel-card__title">
+
+                  <span class="hotel-id">
+                    ID {{ hotel.id }}
+                  </span>
+
+              <h2>
+                {{ hotel.name }}
+              </h2>
+
+            </div>
+
+          </div>
+
+
+          <div class="hotel-card__info">
+
+            <div class="info-row">
+
+                  <span>
+                    Город
+                  </span>
+
+              <strong>
+                {{ hotel.city.name }}
+              </strong>
+
+            </div>
+
+            <div class="info-row">
+
+                  <span>
+                    Адрес
+                  </span>
+
+              <strong>
+                {{ hotel.address }}
+              </strong>
+
+            </div>
+
+            <div class="info-row">
+
+                  <span>
+                    Категория
+                  </span>
+
+              <strong class="stars">
+
+                @switch (hotel.numberOfStars) {
+
+                @case ('ONE_STAR') {
+                1 ★
+                }
+
+                @case ('TWO_STARS') {
+                2 ★
+                }
+
+                @case ('THREE_STARS') {
+                3 ★
+                }
+
+                @case ('THREE_STARS_PLUS') {
+                3+ ★
+                }
+
+                @case ('FOUR_STARS') {
+                4 ★
+                }
+
+                @case ('FOUR_STARS_PLUS') {
+                4+ ★
+                }
+
+                @case ('FIVE_STARS') {
+                5 ★
+                }
+
+                @case ('FIVE_STARS_PLUS') {
+                5+ ★
+                }
+
+                }
+
+              </strong>
+
+            </div>
+
+            <div class="info-row">
+
+                  <span>
+                    Рейтинг
+                  </span>
+
+              <strong>
+                {{ hotel.rating }}
+              </strong>
+
+            </div>
+
+            <div class="info-row">
+
+                  <span>
+                    Базовая цена
+                  </span>
+
+              <strong class="price">
+                {{ hotel.basePricePerNight }} BYN
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <div class="hotel-card__actions">
+
+            <button
+              class="delete-button"
+              type="button"
+              (click)="openDeleteModal(hotel)">
+              Удалить отель
+            </button>
+
+          </div>
+
+        </article>
+
+        }
+
+      </div>
+
+      }
+
+    </section>
+
+  </main>
+
+
+  @if (hotelToDelete(); as hotel) {
+
+  <div
+    class="modal-backdrop"
+    (click)="closeDeleteModal()">
+
+    <div
+      class="delete-modal"
+      (click)="$event.stopPropagation()">
+
+      <div class="delete-modal__icon">
+        !
+      </div>
+
+      <h2>
+        Удалить отель?
+      </h2>
+
+      <p class="delete-modal__name">
+        {{ hotel.name }}
+      </p>
+
+      <p class="delete-modal__address">
+        {{ hotel.city.name }}, {{ hotel.address }}
+      </p>
+
+      <div class="delete-modal__warning">
+
+        <strong>
+          Обратите внимание
+        </strong>
+
+        <p>
+          Все будущие бронирования этого отеля будут отменены,
+          а средства полностью возвращены пользователям.
+        </p>
+
+      </div>
+
+
+      <div class="delete-modal__actions">
+
+        <button
+          class="modal-cancel-button"
+          type="button"
+          [disabled]="deletingHotelId() === hotel.id"
+          (click)="closeDeleteModal()">
+          Отмена
+        </button>
+
+        <button
+          class="modal-delete-button"
+          type="button"
+          [disabled]="deletingHotelId() === hotel.id"
+          (click)="confirmDeleteHotel()">
+
+          @if (deletingHotelId() === hotel.id) {
+          Удаляем...
+          } @else {
+          Удалить отель
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>

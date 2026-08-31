@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { BookingForReview } from '../../models/booking-for-review';
+import { BookingForReview } from '../../models/booking/booking-for-review';
 import { HotelReviewCreate } from '../../models/hotel-review-create';
 import { BookingService } from '../../services/booking';
 import { HotelReviewService } from '../../services/hotel-review';

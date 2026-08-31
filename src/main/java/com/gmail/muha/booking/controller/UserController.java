@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -18,35 +16,9 @@ public class UserController {
     private final UserService userService;
     private final RegistrationService registrationService;
 
-
-    @GetMapping
-    public List<UserShortDto> findAll() {
-        return userService.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public UserFullDto findById(@PathVariable Long id) {
-        return userService.findById(id);
-    }
-
     @PostMapping
-    public UserFullDto create(@Valid @RequestBody UserCreateDto userCreateDto) {
-        return registrationService.register(userCreateDto);
-    }
-
-    @PutMapping("/{id}")
-    public UserFullDto update(@PathVariable Long id, @Valid @RequestBody UserUpdateDto userUpdateDto) {
-        return userService.update(id, userUpdateDto);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable Long id) {
-        userService.deleteById(id);
-    }
-
-    @GetMapping("/me")
-    public UserProfileDto findProfile(Authentication authentication) {
-        return userService.findProfileByEmail(authentication.getName());
+    public void create(@Valid @RequestBody UserCreateDto userCreateDto) {
+        registrationService.register(userCreateDto);
     }
 
     @PostMapping("/verify-email")
@@ -54,15 +26,30 @@ public class UserController {
         registrationService.verifyEmail(token);
     }
 
+    @PostMapping("/restore-request")
+    public void requestRestore(@Valid @RequestBody UserRestoreRequestDto userRestoreRequestDto) {
+        registrationService.requestRestore(userRestoreRequestDto);
+    }
+
+    @PostMapping("/restore")
+    public void restore(@Valid @RequestBody UserRestoreDto userRestoreDto) {
+        registrationService.restore(userRestoreDto);
+    }
+
+    @GetMapping("/me")
+    public UserProfileDto findProfile(Authentication authentication) {
+        return userService.findProfileByEmail(authentication.getName());
+    }
+
     @PutMapping("/me")
     public UserProfileDto updateProfile(@Valid @RequestBody UserUpdateDto userUpdateDto, Authentication authentication) {
+
         return userService.updateProfile(authentication.getName(), userUpdateDto);
     }
 
     @PutMapping("/me/password")
     public void updatePassword(
             @Valid @RequestBody UserPasswordUpdateDto userPasswordUpdateDto, Authentication authentication) {
-
         userService.updatePassword(authentication.getName(), userPasswordUpdateDto);
     }
 

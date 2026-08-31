@@ -88,7 +88,15 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             where booking.id = :id
               and booking.user.email = :userEmail
             """)
-    Optional<Booking> findByIdAndUserEmail(
-            @Param("id") Long id,
-            @Param("userEmail") String userEmail);
+    Optional<Booking> findByIdAndUserEmail(@Param("id") Long id, @Param("userEmail") String userEmail);
+
+    @Query("""
+            select booking
+            from Booking booking
+            join fetch booking.user
+            join fetch booking.room room
+            where room.hotel.id = :hotelId
+            order by booking.startDate desc
+            """)
+    List<Booking> findAllByHotelId(@Param("hotelId") Long hotelId);
 }

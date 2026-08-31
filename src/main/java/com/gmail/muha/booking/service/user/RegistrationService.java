@@ -1,14 +1,16 @@
 package com.gmail.muha.booking.service.user;
 
-import com.gmail.muha.booking.dto.user.UserCreateDto;
-import com.gmail.muha.booking.dto.user.UserEmailUpdateDto;
-import com.gmail.muha.booking.dto.user.UserFullDto;
+import com.gmail.muha.booking.dto.user.*;
 
 public interface RegistrationService {
 
-    UserFullDto register(UserCreateDto userCreateDto);
+    void register(UserCreateDto userCreateDto);
 
     void verifyEmail(String token);
 
     void updateEmail(String currentEmail, UserEmailUpdateDto userEmailUpdateDto);
+
+    void requestRestore(UserRestoreRequestDto userRestoreRequestDto);
+
+    void restore(UserRestoreDto userRestoreDto);
 }

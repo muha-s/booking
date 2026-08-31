@@ -41,9 +41,9 @@
 .login-card {
   width: 100%;
   max-width: 430px;
-  background: white;
-  border-radius: 16px;
   padding: 36px;
+  border-radius: 16px;
+  background: white;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
 }
 
@@ -85,25 +85,81 @@
   border-color: #168bd0;
 }
 
-.login-button {
+.login-error {
+  margin: 0 0 20px;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.login-button,
+.register-button {
   width: 100%;
-  border: none;
-  border-radius: 8px;
   padding: 14px;
-  background: #ff9700;
-  color: white;
+  border-radius: 8px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
+}
+
+.login-button {
+  border: none;
+  background: #ff9700;
+  color: white;
 }
 
 .login-button:hover {
   background: #e88900;
 }
 
-.login-error {
-  margin: 0 0 20px;
-  color: #dc2626;
-  font-size: 14px;
+.register-button {
+  margin-top: 12px;
+  border: 1px solid #174878;
+  background: white;
+  color: #174878;
+}
+
+.register-button:hover {
+  background: #f8fafc;
+}
+
+.restore-link,
+.back-link {
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #174878;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.restore-link {
+  margin-top: 16px;
+}
+
+.back-link {
+  margin-top: 12px;
+  color: #64748b;
   font-weight: 600;
+}
+
+.restore-link:hover,
+.back-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 520px) {
+  .login-main {
+    padding: 28px 16px;
+  }
+
+  .login-card {
+    padding: 28px 22px;
+  }
+
+  .login-card h1 {
+    font-size: 28px;
+  }
 }

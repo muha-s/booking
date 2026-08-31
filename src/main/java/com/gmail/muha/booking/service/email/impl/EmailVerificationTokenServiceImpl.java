@@ -35,8 +35,7 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
     @Override
     public EmailVerificationToken findValidByToken(String token) {
 
-        EmailVerificationToken verificationToken =
-                tokenRepository.findByToken(token).orElseThrow(() ->
+        EmailVerificationToken verificationToken = tokenRepository.findByToken(token).orElseThrow(() ->
                                 new IllegalArgumentException("Invalid verification token"));
 
         if (verificationToken.getExpiresAt().isBefore(Instant.now())) {

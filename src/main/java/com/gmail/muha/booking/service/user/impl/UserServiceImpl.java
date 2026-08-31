@@ -30,41 +30,6 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserFullDto findById(Long id) {
-        return userMapper.toFullDto(findEntityById(id));
-    }
-
-    @Override
-    public User findEntityById(Long id) {
-        return userRepository.findActiveById(id).orElseThrow(() ->
-                new NotFoundException("User was not found by id: " + id));
-    }
-
-    @Override
-    public List<UserShortDto> findAll() {
-        return userMapper.toShortDtoList(userRepository.findAllActive());
-    }
-
-    @Override
-    public UserFullDto update(Long id, UserUpdateDto userUpdateDto) {
-        User updatingUser = findEntityById(id);
-        userMapper.updateEntity(userUpdateDto, updatingUser);
-        return userMapper.toFullDto(userRepository.save(updatingUser));
-    }
-
-    @Transactional
-    @Override
-    public void deleteById(Long id) {
-        List<Booking> bookings = bookingRepository.findFutureActiveBookingsByUserId(id);
-
-        for (Booking booking : bookings) {
-            bookingCancellationService.cancelByUser(booking);
-        }
-        User user = findEntityById(id);
-        user.setDeletedAt(Instant.now());
-    }
-
-    @Override
     public UserProfileDto findProfileByEmail(String email) {
         User user = userRepository.findActiveByEmail(email)
                 .orElseThrow(() ->

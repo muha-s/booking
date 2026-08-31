@@ -1,9 +1,7 @@
 package com.gmail.muha.booking.service.city.impl;
 
 import com.gmail.muha.booking.dto.city.CityCreateDto;
-import com.gmail.muha.booking.dto.city.CityFullDto;
 import com.gmail.muha.booking.dto.city.CityShortDto;
-import com.gmail.muha.booking.dto.city.CityUpdateDto;
 import com.gmail.muha.booking.exception.NotFoundException;
 import com.gmail.muha.booking.mapper.CityMapper;
 import com.gmail.muha.booking.model.entity.Booking;
@@ -28,10 +26,6 @@ public class CityServiceImpl implements CityService {
     private final CityMapper cityMapper;
     private final BookingCancellationService bookingCancellationService;
 
-    @Override
-    public CityFullDto findById(Long id) {
-        return cityMapper.toFullDto(findEntityById(id));
-    }
 
     @Override
     public City findEntityById(Long id) {
@@ -46,17 +40,9 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public CityFullDto create(CityCreateDto cityCreateDto) {
+    public CityShortDto create(CityCreateDto cityCreateDto) {
         City savedCity = cityRepository.save(cityMapper.toEntity(cityCreateDto));
-        return cityMapper.toFullDto(savedCity);
-    }
-
-    @Override
-    public CityFullDto update(Long id, CityUpdateDto cityUpdateDto) {
-
-        City updatingCity = findEntityById(id);
-        cityMapper.updateEntity(cityUpdateDto, updatingCity);
-        return cityMapper.toFullDto(cityRepository.save(updatingCity));
+        return cityMapper.toShortDto(savedCity);
     }
 
     @Transactional

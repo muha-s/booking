@@ -1,0 +1,168 @@
+<div class="admin-page">
+
+  <header class="header">
+
+    <div class="header__content">
+
+      <div class="logo">
+        Booking
+      </div>
+
+      <div class="header__right">
+
+        <span class="admin-role">
+          HOTEL ADMIN
+        </span>
+
+        <button
+          class="logout-button"
+          type="button"
+          (click)="logout()">
+          Выйти
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <section class="hero">
+
+      <div class="container">
+
+        <p class="hero__label">
+          Панель администратора отеля
+        </p>
+
+        <h1>
+          Мои отели
+        </h1>
+
+        <p class="hero__description">
+          Отели, назначенные вам для управления.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <section class="content container">
+
+      @if (errorMessage()) {
+
+      <div class="message message--error">
+        {{ errorMessage() }}
+      </div>
+
+      }
+
+
+      <div class="section-title">
+
+        <h2>
+          Доступные отели
+        </h2>
+
+        <p>
+          Всего назначено: {{ hotels().length }}
+        </p>
+
+      </div>
+
+
+      @if (hotels().length === 0 && !errorMessage()) {
+
+      <div class="empty-state">
+
+        <div class="empty-state__icon">
+          🏨
+        </div>
+
+        <h2>
+          Отели пока не назначены
+        </h2>
+
+        <p>
+          Обратитесь к системному администратору для назначения отеля.
+        </p>
+
+      </div>
+
+      } @else {
+
+      <div class="hotels-grid">
+
+        @for (hotel of hotels(); track hotel.id) {
+
+        <article class="hotel-card">
+
+          <div class="hotel-card__icon">
+            🏨
+          </div>
+
+
+          <div class="hotel-card__content">
+
+                <span class="hotel-id">
+                  HOTEL #{{ hotel.id }}
+                </span>
+
+            <h2>
+              {{ hotel.name }}
+            </h2>
+
+            <div class="hotel-info">
+
+              <div class="hotel-info__row">
+
+                    <span>
+                      Город
+                    </span>
+
+                <strong>
+                  {{ hotel.city.name }}
+                </strong>
+
+              </div>
+
+              <div class="hotel-info__row">
+
+                    <span>
+                      Адрес
+                    </span>
+
+                <strong>
+                  {{ hotel.address }}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <a
+            class="manage-button"
+            [routerLink]="['/hotel-admin/hotels', hotel.id]">
+            Управление
+          </a>
+
+        </article>
+
+        }
+
+      </div>
+
+      }
+
+    </section>
+
+  </main>
+
+</div>

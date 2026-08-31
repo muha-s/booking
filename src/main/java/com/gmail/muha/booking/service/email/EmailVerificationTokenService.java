@@ -12,4 +12,5 @@ public interface EmailVerificationTokenService {
     void delete(EmailVerificationToken verificationToken);
 
 
+
 }

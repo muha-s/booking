@@ -12,44 +12,29 @@ import java.util.List;
 public class BookingMapper {
 
     private final ShortDtoMapper shortDtoMapper;
-    private final FullDtoMapper fullDtoMapper;
 
-    public BookingMapper(ShortDtoMapper shortDtoMapper, FullDtoMapper fullDtoMapper) {
+
+    public BookingMapper(ShortDtoMapper shortDtoMapper) {
         this.shortDtoMapper = shortDtoMapper;
-        this.fullDtoMapper = fullDtoMapper;
     }
 
-    public BookingFullDto toFullDto(Booking booking) {
+    public BookingManagedDto toManagedDto(Booking booking) {
+        BookingManagedDto bookingManagedDto = new BookingManagedDto();
 
-        BookingFullDto bookingFullDto = new BookingFullDto();
+        bookingManagedDto.setUserFirstName(booking.getUser().getFirstName());
+        bookingManagedDto.setUserLastName(booking.getUser().getLastName());
+        bookingManagedDto.setUserPhone(booking.getUser().getPhone());
+        bookingManagedDto.setUserEmail(booking.getUser().getEmail());
 
-        bookingFullDto.setId(booking.getId());
-        bookingFullDto.setUser(shortDtoMapper.toUserShortDto(booking.getUser()));
-        bookingFullDto.setRoom(fullDtoMapper.toRoomFullDto(booking.getRoom()));
-        bookingFullDto.setStartDate(booking.getStartDate());
-        bookingFullDto.setEndDate(booking.getEndDate());
-        bookingFullDto.setStatus(booking.getStatus());
-        bookingFullDto.setTotalPrice(booking.getTotalPrice());
+        bookingManagedDto.setRoomType(booking.getRoom().getRoomType());
+        bookingManagedDto.setRoomCapacity(booking.getRoom().getRoomCapacity());
 
-        if(booking.getReview() != null){
-            bookingFullDto.setReview(fullDtoMapper.toHotelReviewDto(booking.getReview()));
-        }
-        return bookingFullDto;
-    }
+        bookingManagedDto.setStartDate(booking.getStartDate());
+        bookingManagedDto.setEndDate(booking.getEndDate());
+        bookingManagedDto.setTotalPrice(booking.getTotalPrice());
+        bookingManagedDto.setStatus(booking.getStatus());
 
-    public BookingShortDto toShortDto(Booking booking) {
-
-        BookingShortDto bookingShortDto = new BookingShortDto();
-
-        bookingShortDto.setId(booking.getId());
-        bookingShortDto.setUser(shortDtoMapper.toUserShortDto(booking.getUser()));
-        bookingShortDto.setRoom(shortDtoMapper.toRoomShortDto(booking.getRoom()));
-        bookingShortDto.setStartDate(booking.getStartDate());
-        bookingShortDto.setEndDate(booking.getEndDate());
-        bookingShortDto.setStatus(booking.getStatus());
-        bookingShortDto.setTotalPrice(booking.getTotalPrice());
-
-        return bookingShortDto;
+        return bookingManagedDto;
     }
 
     public BookingForUserDto toForUserDto(Booking booking) {
@@ -106,15 +91,13 @@ public class BookingMapper {
         entity.setEndDate(bookingUpdateDto.getEndDate());
     }
 
-    public List<BookingShortDto> toShortDtoList(List<Booking> bookings) {
-        return bookings.stream()
-                .map(this::toShortDto)
-                .toList();
-    }
-
     public List<BookingForUserDto> toForUserDtoList(List<Booking> bookings) {
         return bookings.stream()
                 .map(this::toForUserDto)
                 .toList();
+    }
+
+    public List<BookingManagedDto> toManagedDtoList(List<Booking> bookings) {
+        return bookings.stream().map(this::toManagedDto).toList();
     }
 }

@@ -1,0 +1,308 @@
+<div class="admin-page">
+
+  <header class="header">
+
+    <div class="header__content">
+
+      <div class="logo">
+        Booking
+      </div>
+
+      <div class="header__right">
+
+        <span class="admin-role">
+          SUPER ADMIN
+        </span>
+
+        <a
+          class="back-button"
+          routerLink="/super-admin">
+          ← Панель
+        </a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <main>
+
+    <section class="hero">
+
+      <div class="container hero__content">
+
+        <div>
+
+          <p class="hero__label">
+            Панель администратора
+          </p>
+
+          <h1>
+            Пользователи
+          </h1>
+
+          <p class="hero__description">
+            Просмотр пользователей системы и управление их статусом.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <section class="content container">
+
+      @if (successMessage()) {
+      <div class="message message--success">
+        {{ successMessage() }}
+      </div>
+      }
+
+      @if (errorMessage()) {
+      <div class="message message--error">
+        {{ errorMessage() }}
+      </div>
+      }
+
+
+      <div class="section-title">
+
+        <div>
+
+          <h2>
+            Пользователи системы
+          </h2>
+
+          <p>
+            Всего зарегистрированных пользователей: {{ users().length }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      @if (users().length === 0 && !errorMessage()) {
+
+      <div class="empty-state">
+
+        <div class="empty-state__icon">
+          👤
+        </div>
+
+        <h2>
+          Пользователей пока нет
+        </h2>
+
+        <p>
+          Зарегистрированные пользователи появятся здесь.
+        </p>
+
+      </div>
+
+      } @else {
+
+      <div class="users-card">
+
+        <div class="users-table__header">
+
+          <div>
+            ID
+          </div>
+
+          <div>
+            Пользователь
+          </div>
+
+          <div>
+            Email
+          </div>
+
+          <div>
+            Телефон
+          </div>
+
+          <div>
+            Статус
+          </div>
+
+          <div>
+            Действие
+          </div>
+
+        </div>
+
+
+        @for (user of users(); track user.id) {
+
+        <div
+          class="users-table__row"
+          [class.users-table__row--deleted]="user.deletedAt !== null">
+
+          <div class="user-id">
+            #{{ user.id }}
+          </div>
+
+
+          <div class="user-person">
+
+            <div class="user-avatar">
+              {{ user.firstName.charAt(0) }}{{ user.lastName.charAt(0) }}
+            </div>
+
+            <div>
+
+              <strong>
+                {{ user.firstName }} {{ user.lastName }}
+              </strong>
+
+              <span>
+                    {{ user.role }}
+                  </span>
+
+            </div>
+
+          </div>
+
+
+          <div class="user-email">
+            {{ user.email }}
+          </div>
+
+
+          <div class="user-phone">
+            {{ user.phone }}
+          </div>
+
+
+          <div>
+
+            @if (user.deletedAt === null) {
+
+            <span class="status status--active">
+                    Активен
+                  </span>
+
+            } @else {
+
+            <span class="status status--deleted">
+                    Удалён
+                  </span>
+
+            }
+
+          </div>
+
+
+          <div class="user-actions">
+
+            @if (user.deletedAt === null) {
+
+            <button
+              class="delete-button"
+              type="button"
+              (click)="openDeleteModal(user)">
+              Удалить
+            </button>
+
+            } @else {
+
+            <span class="deleted-label">
+                    Недоступно
+                  </span>
+
+            }
+
+          </div>
+
+        </div>
+
+        }
+
+      </div>
+
+      }
+
+    </section>
+
+  </main>
+
+
+  @if (userToDelete(); as user) {
+
+  <div
+    class="modal-backdrop"
+    (click)="closeDeleteModal()">
+
+    <div
+      class="delete-modal"
+      (click)="$event.stopPropagation()">
+
+      <div class="delete-modal__icon">
+        !
+      </div>
+
+      <h2>
+        Удалить пользователя?
+      </h2>
+
+      <p class="delete-modal__name">
+        {{ user.firstName }} {{ user.lastName }}
+      </p>
+
+      <p class="delete-modal__email">
+        {{ user.email }}
+      </p>
+
+
+      <div class="delete-modal__warning">
+
+        <strong>
+          Обратите внимание
+        </strong>
+
+        <p>
+          Все будущие бронирования пользователя будут отменены,
+          а средства полностью возвращены.
+        </p>
+
+      </div>
+
+
+      <div class="delete-modal__actions">
+
+        <button
+          class="modal-cancel-button"
+          type="button"
+          [disabled]="deletingUserId() === user.id"
+          (click)="closeDeleteModal()">
+          Отмена
+        </button>
+
+        <button
+          class="modal-delete-button"
+          type="button"
+          [disabled]="deletingUserId() === user.id"
+          (click)="confirmDeleteUser()">
+
+          @if (deletingUserId() === user.id) {
+          Удаляем...
+          } @else {
+          Удалить пользователя
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
+
+</div>

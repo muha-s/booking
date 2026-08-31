@@ -31,23 +31,6 @@ public class HotelReviewServiceImpl implements HotelReviewService {
     private final EmailService emailService;
 
 
-    @Override
-    public HotelReviewDto findById(Long id) {
-        return hotelReviewMapper.toHotelReviewDto(findEntityById(id));
-    }
-
-    @Override
-    public HotelReview findEntityById(Long id) {
-        return hotelReviewRepository.findById(id)
-                .orElseThrow(() ->
-                        new NotFoundException("Hotel review was not found by id: " + id));
-    }
-
-    @Override
-    public List<HotelReviewDto> findAll() {
-        return hotelReviewMapper.toHotelReviewDtoList(hotelReviewRepository.findAll());
-    }
-
     @Transactional
     @Override
     public HotelReviewResponseDto create(HotelReviewCreateDto hotelReviewCreateDto, String userEmail) {
@@ -80,19 +63,6 @@ public class HotelReviewServiceImpl implements HotelReviewService {
             reviewedHotel.setRating(roundedRating);
         }
         return hotelReviewMapper.toHotelReviewResponseDto(savedReview);
-    }
-
-    @Override
-    public HotelReviewDto update(Long id, HotelReviewUpdateDto hotelReviewUpdateDto) {
-
-        HotelReview updatingHotelReview = findEntityById(id);
-        hotelReviewMapper.updateEntity(hotelReviewUpdateDto, updatingHotelReview);
-        return hotelReviewMapper.toHotelReviewDto(hotelReviewRepository.save(updatingHotelReview));
-    }
-
-    @Override
-    public void deleteById(Long id) {
-        hotelReviewRepository.deleteById(id);
     }
 
     @Scheduled(cron = "0 45 16 * * *")

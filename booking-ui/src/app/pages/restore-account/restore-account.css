@@ -1,0 +1,162 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+.restore-page {
+  min-height: 100vh;
+  background: #f3f6f9;
+}
+
+.header {
+  background: #174878;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+.header__content {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.restore-main {
+  min-height: calc(100vh - 68px);
+  padding: 48px 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.restore-card {
+  width: 100%;
+  max-width: 460px;
+  padding: 34px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.restore-card h1 {
+  margin: 0 0 12px;
+  color: #174878;
+  font-size: 30px;
+}
+
+.restore-description {
+  margin: 0 0 26px;
+  color: #6b7280;
+  line-height: 1.55;
+}
+
+.restore-field {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.restore-field span {
+  color: #374151;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.restore-field input {
+  width: 100%;
+  padding: 12px 13px;
+  box-sizing: border-box;
+  border: 1px solid #cfd8e3;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #1f2937;
+  font: inherit;
+  outline: none;
+}
+
+.restore-field input:focus {
+  border-color: #168bd0;
+  box-shadow: 0 0 0 3px rgba(22, 139, 208, 0.12);
+}
+
+.restore-error,
+.restore-success {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.restore-error {
+  background: #fff1f1;
+  color: #b42318;
+}
+
+.restore-success {
+  background: #e8f6ee;
+  color: #18794e;
+}
+
+.restore-button {
+  width: 100%;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 9px;
+  background: #ff9700;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.restore-button:hover:not(:disabled) {
+  filter: brightness(0.96);
+}
+
+.restore-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.login-link {
+  margin-top: 20px;
+  display: block;
+  color: #174878;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 520px) {
+  .restore-main {
+    padding: 28px 16px;
+  }
+
+  .restore-card {
+    padding: 26px 22px;
+  }
+
+  .restore-card h1 {
+    font-size: 26px;
+  }
+}

@@ -1,0 +1,116 @@
+<div class="activation-page">
+
+  <header class="header">
+    <div class="container header__content">
+
+      <button
+        class="logo"
+        type="button"
+        (click)="goToHome()">
+        Booking
+      </button>
+
+    </div>
+  </header>
+
+  <main class="activation-main">
+
+    <section class="activation-card">
+
+      @if (successMessage()) {
+
+      <div class="success-icon">✓</div>
+
+      <h1>Аккаунт активирован</h1>
+
+      <p class="activation-description">
+        {{ successMessage() }}
+      </p>
+
+      <button
+        class="primary-button"
+        type="button"
+        (click)="goToLogin()">
+        Перейти ко входу
+      </button>
+
+      } @else {
+
+      <div class="activation-icon">🔑</div>
+
+      <h1>Активация аккаунта</h1>
+
+      <p class="activation-description">
+        Создайте пароль для входа в панель управления отелями.
+      </p>
+
+      <div class="activation-info">
+        Пароль должен содержать от 8 до 100 символов.
+      </div>
+
+      <form (ngSubmit)="activate()">
+
+        <label class="activation-field">
+          <span>Пароль</span>
+
+          <input
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            [disabled]="loading()"
+            placeholder="Введите пароль"
+            required
+            minlength="8"
+            maxlength="100">
+        </label>
+
+        <label class="activation-field">
+          <span>Повторите пароль</span>
+
+          <input
+            type="password"
+            name="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            [disabled]="loading()"
+            placeholder="Повторите пароль"
+            required
+            minlength="8"
+            maxlength="100">
+        </label>
+
+        @if (errorMessage()) {
+        <div class="activation-error">
+          {{ errorMessage() }}
+        </div>
+        }
+
+        <button
+          class="primary-button"
+          type="submit"
+          [disabled]="loading()">
+
+          @if (loading()) {
+          Активация...
+          } @else {
+          Активировать аккаунт
+          }
+
+        </button>
+
+      </form>
+
+      <button
+        class="back-link"
+        type="button"
+        [disabled]="loading()"
+        (click)="goToLogin()">
+        Уже активировали аккаунт? Войти
+      </button>
+
+      }
+
+    </section>
+
+  </main>
+
+</div>

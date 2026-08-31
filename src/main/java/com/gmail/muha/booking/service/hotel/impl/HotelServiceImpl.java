@@ -2,9 +2,7 @@ package com.gmail.muha.booking.service.hotel.impl;
 
 
 import com.gmail.muha.booking.dto.hotel.HotelCreateDto;
-import com.gmail.muha.booking.dto.hotel.HotelFullDto;
 import com.gmail.muha.booking.dto.hotel.HotelShortDto;
-import com.gmail.muha.booking.dto.hotel.HotelUpdateDto;
 import com.gmail.muha.booking.exception.NotFoundException;
 import com.gmail.muha.booking.mapper.HotelMapper;
 import com.gmail.muha.booking.model.entity.Booking;
@@ -36,11 +34,6 @@ public class HotelServiceImpl implements HotelService {
 
 
     @Override
-    public HotelFullDto findById(Long id) {
-        return hotelMapper.toFullDto(findEntityById(id));
-    }
-
-    @Override
     public Hotel findEntityById(Long id) {
         return hotelRepository.findActiveById(id)
                 .orElseThrow(() ->
@@ -53,18 +46,10 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
-    public HotelFullDto create(HotelCreateDto hotelCreateDto) {
+    public HotelShortDto create(HotelCreateDto hotelCreateDto) {
         City hotelCity = cityService.findEntityById(hotelCreateDto.getCityId());
         Hotel savedHotel = hotelRepository.save(hotelMapper.toEntity(hotelCreateDto, hotelCity));
-        return hotelMapper.toFullDto(savedHotel);
-    }
-
-    @Override
-    public HotelFullDto update(Long id, HotelUpdateDto hotelUpdateDto) {
-
-        Hotel updatingHotel = findEntityById(id);
-        hotelMapper.updateEntity(hotelUpdateDto, updatingHotel);
-        return hotelMapper.toFullDto(hotelRepository.save(updatingHotel));
+        return hotelMapper.toShortDto(savedHotel);
     }
 
     @Transactional

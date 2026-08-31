@@ -102,7 +102,10 @@
 
       <section class="settings-card">
 
-        <button class="section-back" type="button" (click)="backToMenu()">
+        <button
+          class="section-back"
+          type="button"
+          (click)="backToMenu()">
           ← Назад к настройкам
         </button>
 
@@ -157,7 +160,10 @@
 
       <section class="settings-card">
 
-        <button class="section-back" type="button" (click)="backToMenu()">
+        <button
+          class="section-back"
+          type="button"
+          (click)="backToMenu()">
           ← Назад к настройкам
         </button>
 
@@ -218,7 +224,10 @@
 
       <section class="settings-card">
 
-        <button class="section-back" type="button" (click)="backToMenu()">
+        <button
+          class="section-back"
+          type="button"
+          (click)="backToMenu()">
           ← Назад к настройкам
         </button>
 
@@ -278,7 +287,10 @@
 
       <section class="settings-card settings-card--danger">
 
-        <button class="section-back" type="button" (click)="backToMenu()">
+        <button
+          class="section-back"
+          type="button"
+          (click)="backToMenu()">
           ← Назад к настройкам
         </button>
 
@@ -322,6 +334,64 @@
     </section>
 
   </main>
+
+
+  @if (deleteConfirmationOpen()) {
+
+  <div class="delete-modal-backdrop">
+
+    <div class="delete-modal">
+
+      <div class="delete-modal__icon">!</div>
+
+      <h2>Удалить профиль?</h2>
+
+      <p class="delete-modal__description">
+        Вы действительно хотите удалить свой аккаунт?
+      </p>
+
+      <div class="delete-modal__warning">
+        Активные бронирования будут отменены.
+        Восстановить аккаунт позднее можно будет через страницу входа.
+      </div>
+
+      @if (deleteError()) {
+      <div class="settings-error">
+        {{ deleteError() }}
+      </div>
+      }
+
+      <div class="delete-modal__actions">
+
+        <button
+          class="delete-modal__cancel"
+          type="button"
+          [disabled]="deletingProfile()"
+          (click)="closeDeleteConfirmation()">
+          Отмена
+        </button>
+
+        <button
+          class="delete-modal__confirm"
+          type="button"
+          [disabled]="deletingProfile()"
+          (click)="confirmDeleteProfile()">
+
+          @if (deletingProfile()) {
+          Удаление...
+          } @else {
+          Удалить профиль
+          }
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  }
 
 
   @if (profileSaved()) {

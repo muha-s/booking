@@ -10,17 +10,17 @@ import java.util.Optional;
 public interface CityRepository extends JpaRepository<City, Long> {
 
     @Query("""
-           select city
-           from City city
-           where city.deletedAt is null
-           """)
+            select city
+            from City city
+            where city.deletedAt is null
+            """)
     List<City> findAllActive();
 
     @Query("""
-           select city
-           from City city
-           where city.id = :id
-             and city.deletedAt is null
-           """)
+            select city
+            from City city
+            where city.id = :id
+              and city.deletedAt is null
+            """)
     Optional<City> findActiveById(Long id);
 }

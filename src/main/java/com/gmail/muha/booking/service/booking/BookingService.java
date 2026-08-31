@@ -8,31 +8,11 @@ import java.util.List;
 
 public interface BookingService {
 
-    BookingFullDto findById(Long id);
-
-    Booking findEntityById(Long id);
-
-    List<BookingShortDto> findAll();
-
     List<BookingForUserDto> findAllByUserEmail(String userEmail);
 
-    BookingFullDto create(BookingCreateDto bookingCreateDto, String userEmail);
+    void create(BookingCreateDto bookingCreateDto, String userEmail);
 
-    BookingFullDto update(Long id, BookingUpdateDto bookingUpdateDto);
-
-    void completeExpiredBookings();
-
-    List<Booking> findFutureActiveBookingsByUserId(Long userId);
-
-    List<Booking> findFutureActiveBookingsByCityId(Long cityId);
-
-    List<Booking> findFutureActiveBookingsByHotelId(Long cityId);
-
-    List<Booking> findFutureActiveBookingsByRoomId(Long roomId);
-
-    void deleteById(Long id);
-
-    BookingFullDto findByIdForUser(Long id, String userEmail);
+    void updateForUser(Long id, BookingUpdateDto bookingUpdateDto, String userEmail);
 
     Booking findEntityByIdForUser(Long id, String userEmail);
 
@@ -40,8 +20,9 @@ public interface BookingService {
 
     void cancelByUser(Long id, String userEmail);
 
-    BookingFullDto updateForUser(Long id, BookingUpdateDto bookingUpdateDto, String userEmail);
 
     BookingForReviewDto findForReview(Long id, String userEmail);
+
+    List<BookingManagedDto> findManagedByHotelId(Long hotelId);
 
 }

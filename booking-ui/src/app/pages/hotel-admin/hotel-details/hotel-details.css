@@ -1,0 +1,409 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f3f6f9;
+  color: #1f2937;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #174878;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.header-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.role-badge {
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: #ffcc3d;
+  color: #174878;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.back-link {
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+.hero {
+  padding: 36px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #164b7a, #168bd0);
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(23, 72, 120, 0.18);
+}
+
+.hero-label,
+.section-label {
+  display: inline-block;
+  color: #ffcc3d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.hero h1 {
+  margin: 10px 0 8px;
+  font-size: 38px;
+  line-height: 1.15;
+}
+
+.hero p {
+  margin: 0;
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.error-message {
+  margin-top: 24px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: #fff1f1;
+  color: #b42318;
+  font-weight: 600;
+}
+
+.hotel-card,
+.management-section {
+  margin-top: 28px;
+  padding: 28px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.section-heading h2 {
+  margin: 6px 0 0;
+  font-size: 25px;
+  color: #174878;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.detail-item {
+  min-height: 92px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  background: #f5f8fb;
+}
+
+.detail-label {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.detail-item strong {
+  color: #1f2937;
+  font-size: 17px;
+}
+
+.balance-item {
+  background: #eef7ff;
+}
+
+.balance-item strong {
+  color: #174878;
+  font-size: 21px;
+}
+
+.management-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.management-card {
+  min-height: 170px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  border: 1px solid #e1e7ee;
+  border-radius: 14px;
+  background: #ffffff;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.management-card:hover {
+  transform: translateY(-2px);
+  border-color: #168bd0;
+  box-shadow: 0 8px 20px rgba(23, 72, 120, 0.12);
+}
+
+.management-card h3 {
+  margin: 0 0 10px;
+  color: #174878;
+  font-size: 22px;
+}
+
+.management-card p {
+  margin: 0;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.management-action {
+  align-self: flex-start;
+  padding: 10px 16px;
+  border-radius: 9px;
+  background: #ff9700;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+@media (max-width: 850px) {
+  .details-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .management-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .header-inner {
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .header-right {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+  }
+
+  .page {
+    padding: 20px 16px 40px;
+  }
+
+  .hero {
+    padding: 26px 22px;
+  }
+
+  .hero h1 {
+    font-size: 30px;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hotel-card,
+  .management-section {
+    padding: 22px;
+  }
+}
+
+.stars {
+  color: #ff9700 !important;
+  font-size: 24px !important;
+  letter-spacing: 1px;
+}
+
+.edit-button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 9px;
+  background: #ff9700;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.edit-button:hover {
+  filter: brightness(0.96);
+}
+
+.edit-form {
+  margin-bottom: 24px;
+  padding: 22px;
+  border: 1px solid #d9e2ec;
+  border-radius: 14px;
+  background: #f8fbfd;
+}
+
+.edit-form-heading {
+  margin-bottom: 18px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.edit-form-heading h3 {
+  margin: 6px 0 0;
+  color: #174878;
+  font-size: 21px;
+}
+
+.edit-close {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  background: #e9eef3;
+  color: #4b5563;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.edit-close:hover {
+  background: #dde5ec;
+}
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.edit-field span {
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.edit-field input,
+.edit-field select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border: 1px solid #cfd8e3;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #1f2937;
+  font: inherit;
+  outline: none;
+}
+
+.edit-field input:focus,
+.edit-field select:focus {
+  border-color: #168bd0;
+  box-shadow: 0 0 0 3px rgba(22, 139, 208, 0.12);
+}
+
+.form-error {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  background: #fff1f1;
+  color: #b42318;
+  font-weight: 600;
+}
+
+.edit-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.edit-cancel,
+.edit-save {
+  padding: 10px 17px;
+  border-radius: 9px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.edit-cancel {
+  border: 1px solid #cfd8e3;
+  background: #ffffff;
+  color: #4b5563;
+}
+
+.edit-save {
+  border: none;
+  background: #ff9700;
+  color: #ffffff;
+}
+
+.edit-cancel:disabled,
+.edit-save:disabled,
+.edit-close:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+@media (max-width: 620px) {
+  .edit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-actions {
+    flex-direction: column-reverse;
+  }
+
+  .edit-cancel,
+  .edit-save {
+    width: 100%;
+  }
+}
