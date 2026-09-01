@@ -7,6 +7,8 @@ import com.gmail.muha.booking.dto.hotel.HotelUpdateDto;
 import com.gmail.muha.booking.dto.room.RoomManagedCreateDto;
 import com.gmail.muha.booking.dto.room.RoomManagedDto;
 import com.gmail.muha.booking.dto.user.HotelAdminActivationDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ public interface HotelAdminService {
 
     void deleteManagedRoom(String email, Long hotelId, Long roomId);
 
-    List<BookingManagedDto> findManagedBookings(String email, Long hotelId);
+    Page<BookingManagedDto> findManagedBookings(String email, Long hotelId, Pageable pageable);
 
     HotelManagedFullDto updateManagedHotel(String email, Long hotelId, HotelUpdateDto hotelUpdateDto);
 }

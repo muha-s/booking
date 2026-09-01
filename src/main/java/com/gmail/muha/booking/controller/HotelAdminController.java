@@ -10,6 +10,9 @@ import com.gmail.muha.booking.dto.user.HotelAdminActivationDto;
 import com.gmail.muha.booking.service.hoteladmin.HotelAdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,8 +60,9 @@ public class HotelAdminController {
     }
 
     @GetMapping("/hotels/{hotelId}/bookings")
-    public List<BookingManagedDto> findManagedBookings(@PathVariable Long hotelId, Authentication authentication) {
-        return hotelAdminService.findManagedBookings(authentication.getName(), hotelId);
+    public Page<BookingManagedDto> findManagedBookings(
+            @PathVariable Long hotelId, Authentication authentication, @PageableDefault(size = 10) Pageable pageable) {
+        return hotelAdminService.findManagedBookings(authentication.getName(), hotelId, pageable);
     }
 
     @PutMapping("/hotels/{hotelId}")

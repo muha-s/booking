@@ -1,10 +1,11 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BookingCreate } from '../models/booking/booking-create';
-import { BookingForUser } from '../models/booking/booking-for-user';
 import { BookingForReview } from '../models/booking/booking-for-review';
+import { BookingForUser } from '../models/booking/booking-for-user';
 import { BookingUpdate } from '../models/booking/booking-update';
+import { PageResponse } from '../models/common/page-response';
 import { AuthService } from './auth';
 
 @Injectable({
@@ -34,16 +35,23 @@ export class BookingService {
     );
   }
 
-  findMyBookings(): Observable<BookingForUser[]> {
+  findMyBookings(
+    page: number,
+    size: number
+  ): Observable<PageResponse<BookingForUser>> {
     const token = this.authService.getToken();
 
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
 
-    return this.http.get<BookingForUser[]>(
+    const params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    return this.http.get<PageResponse<BookingForUser>>(
       `${this.apiUrl}/my`,
-      { headers }
+      { headers, params }
     );
   }
 

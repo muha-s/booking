@@ -1,14 +1,15 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { HotelManaged } from '../../models/hotel/hotel-managed';
-import { HotelAdminActivation } from '../../models/hotel-admin/hotel-admin-activation';
-import { AuthService } from '../auth';
-import { HotelManagedFull } from '../../models/hotel/hotel-managed-full';
-import { RoomManaged } from '../../models/room/room-managed';
-import { RoomManagedCreate } from '../../models/room/room-managed-create';
 import { BookingManaged } from '../../models/booking/booking-managed';
+import { PageResponse } from '../../models/common/page-response';
+import { HotelAdminActivation } from '../../models/hotel-admin/hotel-admin-activation';
+import { HotelManagedFull } from '../../models/hotel/hotel-managed-full';
+import { HotelManaged } from '../../models/hotel/hotel-managed';
 import { HotelUpdate } from '../../models/hotel/hotel-update';
+import { RoomManagedCreate } from '../../models/room/room-managed-create';
+import { RoomManaged } from '../../models/room/room-managed';
+import { AuthService } from '../auth';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,7 @@ export class HotelAdminService {
 
   findManagedHotelById(hotelId: number): Observable<HotelManagedFull> {
     const token = this.authService.getToken();
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
@@ -57,6 +59,7 @@ export class HotelAdminService {
 
   findManagedRooms(hotelId: number): Observable<RoomManaged[]> {
     const token = this.authService.getToken();
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
@@ -73,6 +76,7 @@ export class HotelAdminService {
   ): Observable<RoomManaged> {
 
     const token = this.authService.getToken();
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
@@ -90,6 +94,7 @@ export class HotelAdminService {
   ): Observable<void> {
 
     const token = this.authService.getToken();
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
@@ -100,15 +105,25 @@ export class HotelAdminService {
     );
   }
 
-  findManagedBookings(hotelId: number): Observable<BookingManaged[]> {
+  findManagedBookings(
+    hotelId: number,
+    page: number,
+    size: number
+  ): Observable<PageResponse<BookingManaged>> {
+
     const token = this.authService.getToken();
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
 
-    return this.http.get<BookingManaged[]>(
+    const params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    return this.http.get<PageResponse<BookingManaged>>(
       `${this.apiUrl}/hotels/${hotelId}/bookings`,
-      { headers }
+      { headers, params }
     );
   }
 
@@ -118,6 +133,7 @@ export class HotelAdminService {
   ): Observable<HotelManagedFull> {
 
     const token = this.authService.getToken();
+
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });

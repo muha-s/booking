@@ -1,9 +1,10 @@
 package com.gmail.muha.booking.service.hotel.impl;
 
-import com.gmail.muha.booking.dto.hotel_review.*;
+import com.gmail.muha.booking.dto.hotel_review.HotelReviewCreateDto;
+import com.gmail.muha.booking.dto.hotel_review.HotelReviewForHotelDto;
+import com.gmail.muha.booking.dto.hotel_review.HotelReviewResponseDto;
 import com.gmail.muha.booking.exception.EmailSendingException;
 import com.gmail.muha.booking.exception.HotelReviewException;
-import com.gmail.muha.booking.exception.NotFoundException;
 import com.gmail.muha.booking.mapper.HotelReviewMapper;
 import com.gmail.muha.booking.model.entity.Booking;
 import com.gmail.muha.booking.model.entity.Hotel;
@@ -65,7 +66,7 @@ public class HotelReviewServiceImpl implements HotelReviewService {
         return hotelReviewMapper.toHotelReviewResponseDto(savedReview);
     }
 
-    @Scheduled(cron = "0 45 16 * * *")
+    @Scheduled(cron = "0 50 16 * * *")
     @Transactional
     @Override
     public void sendReviewRequests() {

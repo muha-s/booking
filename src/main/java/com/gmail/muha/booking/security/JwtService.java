@@ -19,10 +19,7 @@ public class JwtService {
      private final JwtEncoder jwtEncoder;
      private final long expiration;
 
-    public JwtService(
-            JwtEncoder jwtEncoder,
-            @Value("${app.jwt.expiration}") long expiration) {
-
+    public JwtService(JwtEncoder jwtEncoder, @Value("${app.jwt.expiration}") long expiration) {
         this.jwtEncoder = jwtEncoder;
         this.expiration = expiration;
     }

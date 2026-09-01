@@ -25,8 +25,7 @@ public class AuthenticationController {
     private final JwtService jwtService;
 
     @PostMapping("/login")
-    public LoginResponseDto login(
-            @Valid @RequestBody LoginRequestDto request) {
+    public LoginResponseDto login(@Valid @RequestBody LoginRequestDto request) {
 
         Authentication authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken.unauthenticated(request.getEmail(), request.getPassword()));

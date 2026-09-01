@@ -36,3 +36,5 @@ build/
 
 ### Local AI instructions ###
 AGENTS.md
+
+logs/

@@ -21,6 +21,8 @@ import com.gmail.muha.booking.service.email.EmailVerificationTokenService;
 import com.gmail.muha.booking.service.hoteladmin.HotelAdminService;
 import com.gmail.muha.booking.service.room.RoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -157,7 +159,7 @@ public class HotelAdminServiceImpl implements HotelAdminService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookingManagedDto> findManagedBookings(String email, Long hotelId) {
+    public Page<BookingManagedDto> findManagedBookings(String email, Long hotelId, Pageable pageable) {
 
         User hotelAdmin = userRepository.findActiveByEmail(email)
                 .filter(user -> user.getRole() == UserRole.HOTEL_ADMIN)
@@ -170,7 +172,7 @@ public class HotelAdminServiceImpl implements HotelAdminService {
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Managed hotel was not found by id: " + hotelId));
 
-        return bookingService.findManagedByHotelId(hotel.getId());
+        return bookingService.findManagedByHotelId(hotel.getId(), pageable);
     }
 
     @Override

@@ -18,6 +18,9 @@ import com.gmail.muha.booking.service.hotel.HotelService;
 import com.gmail.muha.booking.service.user.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
@@ -38,15 +42,13 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public List<BookingForUserDto> findAllByUserEmail(String userEmail) {
-        return bookingMapper.toForUserDtoList(bookingRepository.findAllByUserEmail(userEmail));
+    public Page<BookingForUserDto> findAllByUserEmail(String userEmail, Pageable pageable) {
+        return bookingRepository.findAllByUserEmail(userEmail, pageable).map(bookingMapper::toForUserDto);
     }
 
     @Override
-    public List<BookingManagedDto> findManagedByHotelId(Long hotelId) {
-        return bookingMapper.toManagedDtoList(
-                bookingRepository.findAllByHotelId(hotelId)
-        );
+    public Page<BookingManagedDto> findManagedByHotelId(Long hotelId, Pageable pageable) {
+        return bookingRepository.findAllByHotelId(hotelId, pageable).map(bookingMapper::toManagedDto);
     }
 
     @Override
@@ -74,7 +76,6 @@ public class BookingServiceImpl implements BookingService {
 
         bookingUser.setBalance(bookingUser.getBalance().subtract(totalPrice));
         bookingHotel.setBalance(bookingHotel.getBalance().add(totalPrice));
-
         bookingRepository.save(creatingBooking);
     }
 
@@ -103,6 +104,9 @@ public class BookingServiceImpl implements BookingService {
         Booking updatingBooking = findEntityByIdForUser(id, userEmail);
 
         if (updatingBooking.getStatus() != BookingStatus.ACTIVE) {
+            log.warn("Booking update rejected: bookingId={}, status={}",
+                    updatingBooking.getId(),
+                    updatingBooking.getStatus());
             throw new BookingUpdateException("Only active bookings can be updated");
         }
 
@@ -121,7 +125,6 @@ public class BookingServiceImpl implements BookingService {
         bookingHotel.setBalance(bookingHotel.getBalance().subtract(oldPrice).add(newPrice));
 
         bookingMapper.updateEntity(bookingUpdateDto, updatingBooking, selectedRoom);
-
     }
 
     @Scheduled(cron = "0 0 1 * * *")

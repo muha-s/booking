@@ -3,12 +3,16 @@ package com.gmail.muha.booking.service.booking;
 import com.gmail.muha.booking.dto.booking.*;
 import com.gmail.muha.booking.model.entity.Booking;
 import com.gmail.muha.booking.model.entity.enums.BookingStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface BookingService {
 
-    List<BookingForUserDto> findAllByUserEmail(String userEmail);
+    Page<BookingForUserDto> findAllByUserEmail(String userEmail, Pageable pageable);
+
+    Page<BookingManagedDto> findManagedByHotelId(Long hotelId, Pageable pageable);
 
     void create(BookingCreateDto bookingCreateDto, String userEmail);
 
@@ -23,6 +27,5 @@ public interface BookingService {
 
     BookingForReviewDto findForReview(Long id, String userEmail);
 
-    List<BookingManagedDto> findManagedByHotelId(Long hotelId);
 
 }
